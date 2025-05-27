@@ -1,0 +1,23 @@
+/* EditableTextSpan.css */
+
+.editable-span {
+  cursor: pointer;
+  padding: 4px;
+  display: inline-block;
+}
+
+input {
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  text-align: center;
+}
+
+
+input:focus {
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Custom focus ring */
+  outline: none;
+}
