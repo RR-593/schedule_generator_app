@@ -9,17 +9,25 @@ const EditableTextSpan = ({ initialText = 'New Training Schedule...', onSave }) 
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
-      inputRef.current.select();
+      handleFocus();
     }
   }, [isEditing]);
+
+  const handleFocus = () => {
+    inputRef.current.select();
+  };
 
   const handleTextClick = () => {
     setIsEditing(true);
   };
 
   const handleBlur = () => {
-    setIsEditing(true);
-    if (onSave) onSave(text);
+    setIsEditing(false);
+    if (text.trim() === "") {
+      setText(initialText);
+      onSave(initialText);
+    }
+    else if (onSave) onSave(text);
   };
 
   const handleKeyDown = (e) => {
@@ -41,6 +49,7 @@ const EditableTextSpan = ({ initialText = 'New Training Schedule...', onSave }) 
           onChange={(e) => setText(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
         />
       ) : (
         <span onClick={handleTextClick} style={{ cursor: 'pointer' }}>
