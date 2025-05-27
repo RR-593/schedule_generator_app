@@ -1,4 +1,5 @@
 import EditableTextSpan from './edibleTextSapn';
+import '../StyleSheets/formSheet.css'
 
 const TaskForm = () => {
 
@@ -7,14 +8,14 @@ const TaskForm = () => {
   };
 
   return (
-    <>
-      <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
+    <div className='formBox'>
+      <div className="formHeading">
         <EditableTextSpan onSave={handleSave} />
       </div>
-      <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
+      <div className='formBody'>
         <EditableTextSpan onSave={handleSave} />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,36 @@
+/* CustomTitleBar.css */
+.title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 8px;
+  -webkit-app-region: drag;
+}
+.window-controls {
+  display: flex;
+  gap: 8px;
+}
+.window-controls button {
+  -webkit-app-region: no-drag;
+  margin-left: 0;
+  height: 12px;
+  width: 12px;
+  border: 0;
+  border-radius: 999px;
+}
+
+.window-controls .close {
+  position: relative;
+  height: 12px;
+  width: 12px;
+}
+
+.window-controls .close > *{
+
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
