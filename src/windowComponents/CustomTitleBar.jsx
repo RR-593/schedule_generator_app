@@ -2,8 +2,7 @@ import React from "react";
 import "../StyleSheets/CustomTitleBar.css";
 
 export default function CustomTitleBar() {
-  const { getCurrentWindow } = window.require("@electron/remote");
-  const win = getCurrentWindow();
+  const win = window.electronAPI.getCurrentWindow();
 
   // styles that are applied to the svg element
   const iconStyles = {
@@ -16,7 +15,7 @@ export default function CustomTitleBar() {
 
   // styles that are applied to the ICON svg element
   const hoverStyles = {
-    class: "controlButtonIcon",
+    className: "controlButtonIcon",
   };
 
   // helper component to help you understand
@@ -31,7 +30,7 @@ export default function CustomTitleBar() {
   };
 
   const handleMax = () => {
-    win.maxamize();
+    win.maximize();
   };
 
   return (
