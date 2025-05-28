@@ -50,7 +50,7 @@ contextBridge.exposeInMainWorld('db', {
 
       /**
        * Insert a row
-       * @param {*} { tableName: String, data: { id: '123', name: 'golf' } }  
+       * @param {*} { tableName: 'events', data: { id: '123', name: 'golf' } }  
        * @returns 
        */
       insertInto: (params) => {
@@ -58,7 +58,11 @@ contextBridge.exposeInMainWorld('db', {
         ipcRenderer.invoke('insert-into', params)
       },
 
-      // 🔄 Update a row
+      /**
+       * Update row
+       * @param {*} { tableName: 'events', data: { id: '123', name: 'golf' }, where: { id: '1' } }  
+       * @returns 
+       */
       updateRow: (params) => {
         if (typeof params === 'undefined') return;
         ipcRenderer.invoke('update-row', params)

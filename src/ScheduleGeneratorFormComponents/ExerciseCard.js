@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
 
-const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '' }) => {
+const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSave }) => {
   const [eTitle, setETitle] = useState(escerciseTitle.trim() !== '' ? escerciseTitle : 'excercsie');
   const [eRepSet, setERepSet] = useState(resSet.trim() !== '' ? resSet : 'n×n or just n ...');
 
@@ -20,33 +20,40 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '' }) => 
   }
 
   const saveData = (data) => {
-
-    let name = 'name' in data ? data.name : eTitle
-    let rep_set = 'rep_set' in data ? data.rep_set : eRepSet
-
-
-    console.log(data);
-
-    excerciseId = 1;
-
     const eventsJSON = localStorage.getItem('currentCalenderEvents');
     const events = eventsJSON ? JSON.parse(eventsJSON) : [];
 
-    if (events.length > 0) {
+    let updatedEvents;
+    let newId = 1;
+
+    if (events.some(event => event.id === excerciseId)) {
+      // Update existing event
+      updatedEvents = events.map(event => event.id === excerciseId ? { ...event, ...data } : event);
+
+      dbFns.updateRow({ tableName: 'events', data: updatedEvents.find(event => event.id === excerciseId), where: { id: excerciseId } });
+    } else {
       const existingIds = events.map(event => event.id);
-      while (existingIds.includes(excerciseId)) excerciseId++;
+      while (existingIds.includes(newId)) newId++;
+
+      const newEvent = {
+        id: newId,
+        name: data.name || eTitle,
+        rep_set: data.rep_set || eRepSet,
+        start: 0,
+        end: 0,
+        notes: '',
+        flags: ''
+      };
+
+      updatedEvents = [...events, newEvent];
+      dbFns.insertInto({ tableName: 'events', data: updatedEvents.find(event => event.id === newId) });
     }
 
+    localStorage.setItem('currentCalenderEvents', JSON.stringify(updatedEvents));
 
-    const params = { id: excerciseId, name: name, start: 0, end: 0, rep_set: rep_set, notes: '', flags: '' }
+    console.log(`Exercise ID: ${newId}`);
 
-    events.push(params)
-    localStorage.setItem('currentCalenderEvents', JSON.stringify(events));
-    dbFns.insertInto({ tableName: 'events', data: params });
-
-
-
-    console.log(excerciseId);
+    if (typeof onSave === 'function') onSave(updatedEvents);
   }
 
   return (
