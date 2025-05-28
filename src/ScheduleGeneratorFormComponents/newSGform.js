@@ -1,5 +1,6 @@
 import EditableTextSpan from './edibleTextSapn';
 import '../StyleSheets/formSheet.css'
+import ExerciseCard from './ExerciseCard';
 
 const TaskForm = () => {
 
@@ -13,7 +14,7 @@ const TaskForm = () => {
         <EditableTextSpan onSave={handleSave} />
       </div>
       <div className='formBody'>
-        <EditableTextSpan onSave={handleSave} />
+        <ExerciseCard />
       </div>
     </div>
   );
