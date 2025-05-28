@@ -54,7 +54,7 @@ ipcMain.handle("get-calendar-events", async () => {
 
 
 
-const createTable = (event, { tableName, columns }) => {
+const createTable = ({ tableName, columns }) => {
   const cols = columns.map(col => `${col.name} ${col.type}`).join(', ');
   const stmt = `CREATE TABLE IF NOT EXISTS ${tableName} (${cols})`;
   try {
@@ -63,16 +63,21 @@ const createTable = (event, { tableName, columns }) => {
   } catch (error) {
     console.error(`Error creating table: ${error.message}`);
   }
+
+  const stmt11 = `DELETE FROM ${tableName}`;
+  // db.prepare(stmt11).run();
 }
 
-createTable('create-table', { tableName: 'events', columns: [
-  {name: 'id', type: 'TEXT PRIMARY KEY'},
-  {name: 'name', type: 'TEXT'},
-  {name: 'start', type: 'DATETIME'},
-  {name: 'end', type: 'DATETIME'},
-  {name: 'notes', type: 'TEXT'},
-  {name: 'flags', type: 'TEXT'}
-] });
+createTable( {
+  tableName: 'events', columns: [
+    { name: 'id', type: 'NUMBER PRIMARY KEY' },
+    { name: 'name', type: 'TEXT' },
+    { name: 'start', type: 'DATETIME' },
+    { name: 'end', type: 'DATETIME' },
+    { name: 'notes', type: 'TEXT' },
+    { name: 'flags', type: 'TEXT' }
+  ]
+});
 
 //
 // 🧱 Create a table with specified columns
@@ -86,8 +91,10 @@ ipcMain.handle('create-table', (event, { tableName, columns }) => {
 // 📄 Select all rows from a given table
 //
 ipcMain.handle('select-all', (event, tableName) => {
-  const stmt = `SELECT * FROM ${tableName}`;
-  return db.prepare(stmt).all();
+  const stmt = `SELECT * FROM ${tableName} ORDER BY id`;
+  const result = db.prepare(stmt).all();
+  // console.log(result);
+  return result;
 });
 
 //
@@ -95,12 +102,17 @@ ipcMain.handle('select-all', (event, tableName) => {
 // data: { id: 'e1', name: 'Event Name', datetime: '2025-05-28T10:00:00' }
 //
 ipcMain.handle('insert-into', (event, { tableName, data }) => {
+  console.log('ADDING data to ' + tableName);
   const columns = Object.keys(data).join(', ');
   const placeholders = Object.keys(data).map(() => '?').join(', ');
   const values = Object.values(data);
 
+
+  console.log(placeholders);
+
   const stmt = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders})`;
-  return db.prepare(stmt).run(...values);
+  console.log(stmt);
+  return db.prepare(stmt).run(values);
 });
 
 //

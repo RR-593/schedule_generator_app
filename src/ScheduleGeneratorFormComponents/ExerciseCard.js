@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import EditableTextSpan from "./edibleTextSapn";
 import "../StyleSheets/ExerciseCard.css";
 
-const ExerciseCard = ({ escerciseTitle = '', resSets = '', onSave }) => {
+const ExerciseCard = ({ escerciseTitle = '', resSets = '' }) => {
   const [eTitle, setETitle] = useState('excercsie');
   const [eRepSet, setERepSet] = useState('n×n or just n ...');
+
+  // const dbFns = window.db.dataBaseFns();
 
   useEffect(() => {
     if (escerciseTitle.trim() !== '') setETitle(escerciseTitle);
     if (resSets.trim() !== '') setERepSet(resSets);
-  }, [escerciseTitle,resSets]);
+  }, [escerciseTitle, resSets]);
 
   return (
     <div className="container">

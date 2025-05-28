@@ -23,18 +23,49 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
 
 contextBridge.exposeInMainWorld('db', {
-  // 🧱 Create a table
-  createTable: (params) => ipcRenderer.invoke('create-table', params),
+  dataBaseFns: () => {
 
-  // 📄 Select all rows from a table
-  selectAll: (tableName) => ipcRenderer.invoke('select-all', tableName),
+    return {
+      // 🧱 Create a table
+      /**
+       * 
+       * @param {*} { tableName: String, columns: [{ name: 'name', type: 'TEXT' }] } 
+       * @returns 
+       */
+      createTable: (params) => {
+        if (typeof params === 'undefined') return;
+        return ipcRenderer.invoke('create-table', params)
+      },
 
-  // ➕ Insert a row
-  insertInto: (params) => ipcRenderer.invoke('insert-into', params),
+      // 📄 Select all rows from a table
+      selectAll: (tableName) => {
+        if (typeof tableName === 'undefined') return;
+        const result = ipcRenderer.invoke('select-all', tableName);
+        // console.log(result);
+        return result
+      },
 
-  // 🔄 Update a row
-  updateRow: (params) => ipcRenderer.invoke('update-row', params),
+      /**
+       * Insert a row
+       * @param {*} { tableName: String, data: { id: '123', name: 'golf' } }  
+       * @returns 
+       */
+      insertInto: (params) => {
+        if (typeof params === 'undefined') return;
+        ipcRenderer.invoke('insert-into', params)
+      },
 
-  // ❌ Delete a row
-  deleteRow: (params) => ipcRenderer.invoke('delete-row', params)
+      // 🔄 Update a row
+      updateRow: (params) => {
+        if (typeof params === 'undefined') return;
+        ipcRenderer.invoke('update-row', params)
+      },
+
+      // ❌ Delete a row
+      deleteRow: (params) => {
+        if (typeof params === 'undefined') return;
+        ipcRenderer.invoke('delete-row', params)
+      }
+    }
+  }
 });
