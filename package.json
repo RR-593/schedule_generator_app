@@ -1,7 +1,7 @@
 {
   "name": "schedule_generator_app",
   "version": "0.1.0",
-  "main": "main.js",
+  "main": "electron/preload.js",
   "private": true,
   "dependencies": {
     "@electron/remote": "^2.1.2",
