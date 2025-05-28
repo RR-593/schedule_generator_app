@@ -8,26 +8,28 @@
   -webkit-app-region: drag;
 }
 .window-controls {
+  -webkit-app-region: no-drag;
   display: flex;
   gap: 8px;
 }
-.window-controls button {
-  -webkit-app-region: no-drag;
-  margin-left: 0;
-  height: 12px;
-  width: 12px;
-  border: 0;
-  border-radius: 999px;
-}
 
-.window-controls .close {
+.window-controls > *{
   position: relative;
   height: 12px;
   width: 12px;
 }
 
-.window-controls .close > *{
+.controlButtonIcon {
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
 
+.window-controls:hover .controlButtonIcon {
+  opacity: 1;
+}
+
+
+.window-controls * > * {
   width: 100%;
   height: 100%;
   position: absolute;
