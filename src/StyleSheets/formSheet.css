@@ -17,10 +17,10 @@
 
 .formBody {
   display: block;
-  max-width: 100%;
+  width: -webkit-fill-available;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px;
   border-radius: 13px 0px 0px 0px;
 }
 
