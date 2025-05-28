@@ -1,5 +1,7 @@
 const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron');
 const path = require('path');
+const isDev = require('electron-is-dev');
+
 const remoteMain = require('@electron/remote/main');
 const { execFile } = require("child_process");
 
@@ -27,7 +29,15 @@ function createWindow() {
 
   console.log("Main Window webContents ID:", win.webContents.id);
 
-  win.loadURL('http://localhost:3000'); // Load your React app
+  win.loadURL(
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../build/index.html')}`
+  );
+
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
 
 
   // Open the DevTools
@@ -68,7 +78,7 @@ const createTable = ({ tableName, columns }) => {
   // db.prepare(stmt11).run();
 }
 
-createTable( {
+createTable({
   tableName: 'events', columns: [
     { name: 'id', type: 'NUMBER PRIMARY KEY' },
     { name: 'name', type: 'TEXT' },
