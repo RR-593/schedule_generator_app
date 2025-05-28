@@ -1,44 +1,37 @@
-import EditableTextSpan from './edibleTextSapn';
-import '../StyleSheets/formSheet.css'
+import React, { useEffect, useState } from 'react';
+import EditableTextSpan from './EditableTextSpan';
+import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
-import React, { useEffect } from 'react';
 
 const TaskForm = () => {
-  const dbFns = window.db.dataBaseFns();
-
-  const handleSave = (newText) => {
-    console.log('Saved text:', newText);
-  };
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    dbFns.selectAll('events')
-      .then(result => {
+    const fetchEvents = async () => {
+      try {
+        const dbFns = window.db.dataBaseFns();
+        const result = await dbFns.selectAll('events');
         if (result.length > 0) {
           console.log(result);
+          setEvents(result);
           localStorage.setItem('currentCalenderEvents', JSON.stringify(result));
         } else {
           console.log("No data found in the events table.");
         }
-      })
-      .catch(error => {
-        console.error(error); // This will run if the promise is rejected
-      });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  }, [dbFns]);
+    fetchEvents();
+  }, []);
 
-  const ecards = () => {
-    let cards = []
-    const events = JSON.parse(localStorage.getItem('currentCalenderEvents'));
-    if (events == null) return <ExerciseCard />
-
-    for (let event of events){
-      console.log(event);
-
-      cards.push(<ExerciseCard key={event.id} escerciseTitle={event.name} resSets={event.notes} />)
-    }
-    return cards
-  }
+  const handleSave = (newText) => {
+    console.log('Saved text:', newText);
+  };
 
   return (
     <div className='formBox'>
@@ -46,7 +39,23 @@ const TaskForm = () => {
         <EditableTextSpan onSave={handleSave} />
       </div>
       <div className='formBody'>
-        {ecards()}
+        {loading ? (
+          <p>Loading events...</p>
+        ) : (
+          events.length > 0 ? (
+            events.map(event => (
+              <ExerciseCard
+                key={event.id}
+                excerciseId={event.id}
+                escerciseTitle={event.name}
+                resSet={event.notes}
+              />
+            ))
+          ) : (<></>
+          )
+
+        )}
+        <ExerciseCard />
       </div>
     </div>
   );

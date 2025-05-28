@@ -21,6 +21,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 });
 
+contextBridge.exposeInMainWorld('globalVars', {
+});
+
 
 contextBridge.exposeInMainWorld('db', {
   dataBaseFns: () => {

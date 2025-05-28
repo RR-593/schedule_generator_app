@@ -3,6 +3,7 @@ import TaskForm from './ScheduleGeneratorFormComponents/newSGform';
 import './App.css';
 
 function App() {
+  localStorage.clear();
   return (
     <div className="App">
       {/* <CalendarEvents></CalendarEvents> */}

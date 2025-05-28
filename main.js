@@ -4,7 +4,7 @@ const remoteMain = require('@electron/remote/main');
 const { execFile } = require("child_process");
 
 const Database = require('better-sqlite3');
-const db = new Database(path.join(__dirname, "data.db"));
+const db = new Database(path.join(__dirname, "data/data.db"));
 
 
 remoteMain.initialize();
@@ -74,6 +74,7 @@ createTable( {
     { name: 'name', type: 'TEXT' },
     { name: 'start', type: 'DATETIME' },
     { name: 'end', type: 'DATETIME' },
+    { name: 'rep_set', type: 'TEXT' },
     { name: 'notes', type: 'TEXT' },
     { name: 'flags', type: 'TEXT' }
   ]
