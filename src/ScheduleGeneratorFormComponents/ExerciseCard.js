@@ -5,6 +5,7 @@ import "../StyleSheets/ExerciseCard.css";
 const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSave }) => {
   const [eTitle, setETitle] = useState(escerciseTitle.trim() !== '' ? escerciseTitle : 'excercsie');
   const [eRepSet, setERepSet] = useState(resSet.trim() !== '' ? resSet : 'n×n or just n ...');
+  const [eId, setExcerciseId] = useState(excerciseId !== 0 ? excerciseId : 0);
 
   const dbFns = window.db.dataBaseFns();
 
@@ -83,7 +84,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
       dbFns.insertInto({ tableName: 'events', data: updatedEvents.find(event => event.id === newId) });
     }
 
-    localStorage.setItem('currentCalenderEvents', JSON.stringify(updatedEvents));
+    setExcerciseId(newId);
 
     console.log(`Exercise ID: ${newId}`);
 
@@ -105,15 +106,20 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
     className: "controlButtonIcon",
   };
 
+  const deleteData = () => {
+    console.log('Deleting: ' + eId);
+    dbFns.deleteRow({ tableName: 'events', where: {id: eId}});
+    if (typeof onSave === 'function') onSave();
+  }
+
   // helper component to help you understand
   const Icon = ({ children, ...props }) => <svg {...props}>{children}</svg>;
-
 
 
   return (
     <div className="exerciseCard">
       <div className="cardControls" >
-        <div className="close" onClick={()=>{}}>
+        <div className="delete" onClick={deleteData}>
           <Icon {...iconStyles}>
             <circle cx="6" cy="6" r="6" fill="#aacbce" />
           </Icon>

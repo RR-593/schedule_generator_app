@@ -68,7 +68,11 @@ contextBridge.exposeInMainWorld('db', {
         ipcRenderer.invoke('update-row', params)
       },
 
-      // ❌ Delete a row
+      /**
+       * Delete from table
+       * @param {*} { tableName: 'events', where: { id: '1' } }  
+       * @returns 
+       */
       deleteRow: (params) => {
         if (typeof params === 'undefined') return;
         ipcRenderer.invoke('delete-row', params)
