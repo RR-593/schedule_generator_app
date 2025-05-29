@@ -1,3 +1,39 @@
+.exerciseCard{
+  position: relative;
+}
+
+.cardControls {
+  position: absolute;
+  top: 5px;
+  right: 12px;
+
+  /* background-color: #aacbce; */
+}
+
+.cardControls > *{
+  position: relative;
+  height: 12px;
+  width: 12px;
+}
+
+.cardControls * > * {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cardControls:hover .controlButtonIcon {
+  opacity: 1;
+}
+
+.controlButtonIcon {
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+
 .card {
   display: flex;
   gap: 17px;
@@ -8,7 +44,8 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.card h2, .card h3 {
+.card h2,
+.card h3 {
   margin: 0 0 10px;
 }
 
