@@ -8,13 +8,47 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
 
   const dbFns = window.db.dataBaseFns();
 
-  // const dbFns = window.db.dataBaseFns();
+  const patterns = [
+    {
+      regex: /^(\d+)x(\d+)$/,
+      replacer: ([, sets, reps]) => `${reps} reps x ${sets} sets`
+    },
+    {
+      regex: /^(\d+)$/,
+      replacer: ([, sets]) => `${sets} sets`
+    },
+    {
+      regex: /^(\d+)\s*(x?w|w|week)$/i,
+      replacer: ([, num]) => {
+        const number = parseInt(num);
+        if (number === 1) return "Once a week";
+        if (number === 2) return "Twice a week";
+        return `${number} Times a week`;
+      }
+    }
+  ];
+
+  const formatRepSet = (patterns) => {
+    return function format(input) {
+      for (const { regex, replacer } of patterns) {
+        const match = input.match(regex);
+        if (match) {
+          return replacer(match);
+        }
+      }
+      return input; // default return if no pattern matches
+    };
+  }
+
+  const formatExercise = formatRepSet(patterns);
+
   const handleTitleSave = (data) => {
     setETitle(data);
     saveData({ name: data })
   }
 
   const handleRepSetSave = (data) => {
+    data = formatExercise(data);
     setERepSet(data);
     saveData({ rep_set: data })
   }
@@ -53,7 +87,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
 
     console.log(`Exercise ID: ${newId}`);
 
-    if (typeof onSave === 'function') onSave(updatedEvents);
+    if (typeof onSave === 'function') onSave();
   }
 
   return (
@@ -70,7 +104,9 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
       ) : (
         < div className="card" > {/* Generic Card */}
           <div className="details">
-            <EditableTextSpan initialText={eTitle} onSave={handleTitleSave} />
+            <h3>
+              <EditableTextSpan initialText={eTitle} onSave={handleTitleSave} />
+            </h3>
             <p> </p>
             <EditableTextSpan initialText={eRepSet} onSave={handleRepSetSave} />
             {/* <label>Repeat:</label>

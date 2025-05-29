@@ -36,8 +36,8 @@ const TaskForm = () => {
     console.log('Saved text:', newText);
   };
 
-  const handleNewEvent = (updatedEvents) => {
-    setEvents([...updatedEvents]);
+  const handleNewEvent = () => {
+    fetchEvents();
   };
 
   return (

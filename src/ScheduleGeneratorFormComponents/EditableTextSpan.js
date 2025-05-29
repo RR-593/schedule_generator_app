@@ -13,6 +13,10 @@ const EditableTextSpan = ({ initialText = 'New Training Schedule...', onSave }) 
     }
   }, [isEditing]);
 
+  useEffect(() => {
+    setText(initialText);
+  }, [initialText]);
+
   const handleFocus = () => {
     inputRef.current.select();
   };
