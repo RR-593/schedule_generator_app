@@ -103,7 +103,7 @@ ipcMain.handle('create-table', (event, { tableName, columns }) => {
 // 📄 Select all rows from a given table
 //
 ipcMain.handle('select-all', (event, tableName) => {
-  const stmt = `SELECT * FROM ${tableName} ORDER BY id`;
+  const stmt = `SELECT * FROM ${tableName} ORDER BY item_order`;
   const result = db.prepare(stmt).all();
   // console.log(result);
   return result;
@@ -137,7 +137,13 @@ ipcMain.handle('update-row', (event, { tableName, data, where }) => {
 
   const values = [...Object.values(data), ...Object.values(where)];
   const stmt = `UPDATE ${tableName} SET ${sets} WHERE ${whereClause}`;
-  return db.prepare(stmt).run(...values);
+  try {
+    return db.prepare(stmt).run(...values);
+  } catch (e) {
+    console.log(data);
+    console.log(stmt);
+    console.log(e);
+  }
 });
 
 //

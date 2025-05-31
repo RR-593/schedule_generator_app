@@ -70,11 +70,16 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
       const existingIds = events.map(event => event.id);
       while (existingIds.includes(newId)) newId++;
 
+      console.log(events);
+      let newOrder = 0
+      if (events.length > 0)
+        newOrder = events[events.length - 1].item_order + 1;
+
       const newEvent = {
         id: newId,
         name: data.name || eTitle,
         rep_set: data.rep_set || eRepSet,
-        order: 0,
+        item_order: data.item_order || newOrder,
         start: 0,
         end: 0,
         notes: '',
@@ -108,8 +113,8 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
   };
 
   const deleteData = () => {
-    console.log('Deleting: ' + eId);
-    dbFns.deleteRow({ tableName: 'events', where: {id: eId}});
+    // console.log('Deleting: ' + eId);
+    dbFns.deleteRow({ tableName: 'events', where: { id: eId } });
     if (typeof onSave === 'function') onSave();
   }
 

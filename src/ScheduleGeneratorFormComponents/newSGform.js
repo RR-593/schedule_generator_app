@@ -34,12 +34,28 @@ const TaskForm = () => {
     }
   };
 
+  const reOrderEvents = () => {
+    const dbFns = window.db.dataBaseFns();
+    const eventsJSON = localStorage.getItem('currentCalenderEvents');
+    const events = eventsJSON ? JSON.parse(eventsJSON) : [];
+
+
+    events.forEach((event, index) => dbFns.updateRow({ tableName: 'events', data: { ...event, item_order: index }, where: { id: event.id } }));
+  };
+
   const handleSave = (newText) => {
     console.log('Saved text:', newText);
   };
 
   const handleNewEvent = () => {
-    fetchEvents();
+    setLoading(true);
+    try {
+      reOrderEvents();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      fetchEvents();
+    }
   };
 
   return (
@@ -51,7 +67,7 @@ const TaskForm = () => {
       </div>
       <div className='formBody'>
         {loading ? (
-          <p>Loading events...</p>
+          <p key={Date.now() + 0.1}>Loading events...</p>
         ) : (
           [...events.map(event => (
             <ExerciseCard
@@ -61,7 +77,7 @@ const TaskForm = () => {
               resSet={event.rep_set}
               onSave={handleNewEvent}
             />
-          )), <ExerciseCard key={Date.now() + 0.1} onSave={handleNewEvent} />]
+          )), <ExerciseCard key={Date.now() * 2} onSave={handleNewEvent} />]
         )}
 
 
