@@ -82,11 +82,12 @@ const TaskForm = () => {
     const storedeEvents = eventsJSON ? JSON.parse(eventsJSON) : [];
 
     storedeEvents.forEach((event, index) => {
-      dbFns.updateRow({
-        tableName: 'events',
-        data: { ...event, item_order: index },
-        where: { id: event.id }
-      });
+      if (event.item_order !== index)
+        dbFns.updateRow({
+          tableName: 'events',
+          data: { item_order: index },
+          where: { id: event.id }
+        });
     });
   };
 
@@ -95,13 +96,7 @@ const TaskForm = () => {
   };
 
   const handleNewEvent = () => {
-    try {
-      reOrderEvents();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      fetchEvents();
-    }
+    fetchEvents();
   };
 
   const handleDragEnd = (event) => {
@@ -114,7 +109,8 @@ const TaskForm = () => {
 
     setEvents(newEvents);
     localStorage.setItem('currentCalenderEvents', JSON.stringify(newEvents));
-    handleNewEvent();
+
+    reOrderEvents();
   };
 
   let key = 0
@@ -127,7 +123,7 @@ const TaskForm = () => {
     <div className='formBox'>
 
       <div>
-        <div className='backButton'>
+        <div className='backButton' hidden>
           <img alt='Back Button' src={logo1} />
         </div>
         <div className="formHeading">
@@ -140,15 +136,15 @@ const TaskForm = () => {
         {loading ? (
           <p>Loading events...</p>
         ) : (
-          [(<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext key={getUniqueKey()} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
               {events.map(event => (
                 <SortableExerciseCard key={getUniqueKey(event.id)} event={event} onSave={handleNewEvent} />
               ))}
             </SortableContext>
-          </DndContext>),
-          <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />]
+          </DndContext>
         )}
+        <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />
       </div>
     </div >
   );

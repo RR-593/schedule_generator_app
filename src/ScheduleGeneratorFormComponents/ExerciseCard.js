@@ -3,12 +3,8 @@ import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
 
 const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSave }) => {
-
-  escerciseTitle = escerciseTitle.trim() !== '' ? escerciseTitle : 'Exercise';
-  resSet = resSet.trim() !== '' ? resSet : 'n×n or just n ...';
-
-  const [eTitle, setETitle] = useState(escerciseTitle);
-  const [eRepSet, setERepSet] = useState(resSet);
+  const [eTitle, setETitle] = useState(escerciseTitle.trim() !== '' ? escerciseTitle : 'Exercise');
+  const [eRepSet, setERepSet] = useState(resSet.trim() !== '' ? resSet : 'n×n or just n ...');
   const [eId, setExcerciseId] = useState(excerciseId !== 0 ? excerciseId : 0);
 
   const dbFns = window.db.dataBaseFns();
@@ -48,28 +44,34 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
   const formatExercise = formatRepSet(patterns);
 
   const handleTitleSave = (data) => {
+    if (data === eTitle) return;
     setETitle(data);
     saveData({ name: data })
   }
 
   const handleRepSetSave = (data) => {
     data = formatExercise(data);
+    if (data === eRepSet) return;
     setERepSet(data);
     saveData({ rep_set: data })
   }
 
   const saveData = (data) => {
     const eventsJSON = localStorage.getItem('currentCalenderEvents');
+
+    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, notes: String, flags: String}[]} */
     const events = eventsJSON ? JSON.parse(eventsJSON) : [];
 
-    let updatedEvents;
+    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, notes: String, flags: String}} */
+    let updatedEvent = events.find(event => event.id === excerciseId);
     let newId = 1;
 
-    if (events.some(event => event.id === excerciseId)) {
-      // Update existing event
-      updatedEvents = events.map(event => event.id === excerciseId ? { ...event, ...data } : event);
+    if (updatedEvent !== undefined) {
+      updatedEvent = { ...updatedEvent, ...data };
+      console.log(updatedEvent);
+      console.log(updatedEvent.id);
 
-      dbFns.updateRow({ tableName: 'events', data: updatedEvents.find(event => event.id === excerciseId), where: { id: excerciseId } });
+      dbFns.updateRow({ tableName: 'events', data: { ...updatedEvent }, where: { id: updatedEvent.id } });
     } else {
       const existingIds = events.map(event => event.id);
       while (existingIds.includes(newId)) newId++;
@@ -90,15 +92,20 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
         flags: ''
       };
 
-      updatedEvents = [...events, newEvent];
-      dbFns.insertInto({ tableName: 'events', data: updatedEvents.find(event => event.id === newId) });
+      dbFns.insertInto({ tableName: 'events', data: newEvent });
+      setExcerciseId(newId); // Update local state after insert
+
+      // Avoid second update below
+      if (typeof onSave === 'function') onSave();
+      return;
     }
 
-    setExcerciseId(newId);
-
-    console.log(`Exercise ID: ${newId}`);
+    // Log with current known id
+    console.log(`Exercise ID saved: ${excerciseId}`);
 
     if (typeof onSave === 'function') onSave();
+    else console.error('onSave !== `function`');
+
   }
 
 

@@ -38,6 +38,7 @@ const EditableTextSpan = ({ initialText = 'New Training Schedule...', onSave }) 
   };
 
   const saveText = () => {
+    // console.log(text);
     if (text === initialText) return;
     if (onSave) onSave(text);
     else console.error('onSave !== `function`');
