@@ -118,7 +118,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
 
   return (
     <div className="exerciseCard">
-      <div className="cardControls" >
+      <div className="cardControls" hidden={excerciseId === 0}>
         <div className="delete" onClick={deleteData}>
           <Icon {...iconStyles}>
             <circle cx="6" cy="6" r="6" fill="#aacbce" />

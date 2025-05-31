@@ -23,6 +23,8 @@ const TaskForm = () => {
         setEvents(result);
         localStorage.setItem('currentCalenderEvents', JSON.stringify(result));
       } else {
+        localStorage.removeItem('currentCalenderEvents')
+        setEvents([]);
         console.log("No data found in the events table.");
       }
     } catch (error) {
@@ -51,13 +53,13 @@ const TaskForm = () => {
         ) : (
           [...events.map(event => (
             <ExerciseCard
-              key={event.id}
+              key={Date.now() + event.id}
               excerciseId={event.id}
               escerciseTitle={event.name}
               resSet={event.rep_set}
               onSave={handleNewEvent}
             />
-          )), <ExerciseCard key={events.length+1} onSave={handleNewEvent} />]
+          )), <ExerciseCard key={Date.now() + 0.1} onSave={handleNewEvent} />]
         )}
 
 
