@@ -3,6 +3,8 @@
 }
 
 .cardControls {
+
+  /* -webkit-app-region: drag; */
   position: absolute;
   top: 5px;
   right: 12px;
