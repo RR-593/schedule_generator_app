@@ -74,6 +74,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
         id: newId,
         name: data.name || eTitle,
         rep_set: data.rep_set || eRepSet,
+        order: 0,
         start: 0,
         end: 0,
         notes: '',

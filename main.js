@@ -82,9 +82,10 @@ createTable({
   tableName: 'events', columns: [
     { name: 'id', type: 'NUMBER PRIMARY KEY' },
     { name: 'name', type: 'TEXT' },
+    { name: 'rep_set', type: 'TEXT' },
+    { name: 'item_order', type: 'NUMBER' },
     { name: 'start', type: 'DATETIME' },
     { name: 'end', type: 'DATETIME' },
-    { name: 'rep_set', type: 'TEXT' },
     { name: 'notes', type: 'TEXT' },
     { name: 'flags', type: 'TEXT' }
   ]

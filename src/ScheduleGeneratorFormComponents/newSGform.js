@@ -45,7 +45,9 @@ const TaskForm = () => {
   return (
     <div className='formBox'>
       <div className="formHeading">
-        <EditableTextSpan onSave={handleSave} />
+        <h2>
+          <EditableTextSpan onSave={handleSave} />
+        </h2>
       </div>
       <div className='formBody'>
         {loading ? (
