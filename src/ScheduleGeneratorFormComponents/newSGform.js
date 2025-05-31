@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import EditableTextSpan from './EditableTextSpan';
 import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
+import logo1 from '../Assests/Logo1.png';
+
 
 import {
   DndContext,
@@ -123,14 +125,20 @@ const TaskForm = () => {
 
   return (
     <div className='formBox'>
-      <div className="formHeading">
-        <h2>
-          <EditableTextSpan onSave={handleSave} />
-        </h2>
+
+      <div>
+        <div className='backButton'>
+          <img alt='Back Button' src={logo1} />
+        </div>
+        <div className="formHeading">
+          <h2>
+            <EditableTextSpan onSave={handleSave} />
+          </h2>
+        </div>
       </div>
       <div className='formBody'>
         {loading ? (
-          <p>Loading events...</p> 
+          <p>Loading events...</p>
         ) : (
           [(<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext key={getUniqueKey()} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
@@ -142,7 +150,7 @@ const TaskForm = () => {
           <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />]
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

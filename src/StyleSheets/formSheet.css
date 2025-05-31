@@ -9,6 +9,14 @@
   border-radius: 13px 13px 0px 0px;
 }
 
+.backButton {
+  background-color: unset;
+  width: 130px;
+}
+.backButton > img{
+  width: inherit;
+}
+
 .formHeading {
   display: block;
   width: 400px;
