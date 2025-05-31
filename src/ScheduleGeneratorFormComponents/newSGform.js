@@ -115,9 +115,10 @@ const TaskForm = () => {
     handleNewEvent();
   };
 
-  let key = 0;
-  const getUniqueKey = () => {
-    return Date.now() + key++;
+  let key = 0
+  const getUniqueKey = (extraKey = 0) => {
+    key = key + extraKey + 1;
+    return Date.now() + key;
   }
 
   return (
@@ -129,17 +130,17 @@ const TaskForm = () => {
       </div>
       <div className='formBody'>
         {loading ? (
-          <p>Loading events...</p>
+          <p>Loading events...</p> 
         ) : (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext key={getUniqueKey} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
+          [(<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext key={getUniqueKey()} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
               {events.map(event => (
-                <SortableExerciseCard key={getUniqueKey + event.id} event={event} onSave={handleNewEvent} />
+                <SortableExerciseCard key={getUniqueKey(event.id)} event={event} onSave={handleNewEvent} />
               ))}
             </SortableContext>
-          </DndContext>
+          </DndContext>),
+          <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />]
         )}
-        <ExerciseCard key={getUniqueKey} onSave={handleNewEvent} />
       </div>
     </div>
   );

@@ -3,8 +3,12 @@ import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
 
 const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSave }) => {
-  const [eTitle, setETitle] = useState(escerciseTitle.trim() !== '' ? escerciseTitle : 'excercsie');
-  const [eRepSet, setERepSet] = useState(resSet.trim() !== '' ? resSet : 'n×n or just n ...');
+
+  escerciseTitle = escerciseTitle.trim() !== '' ? escerciseTitle : 'Exercise';
+  resSet = resSet.trim() !== '' ? resSet : 'n×n or just n ...';
+
+  const [eTitle, setETitle] = useState(escerciseTitle);
+  const [eRepSet, setERepSet] = useState(resSet);
   const [eId, setExcerciseId] = useState(excerciseId !== 0 ? excerciseId : 0);
 
   const dbFns = window.db.dataBaseFns();
@@ -113,7 +117,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
   };
 
   const deleteData = () => {
-    // console.log('Deleting: ' + eId);
+    console.log('Deleting: ' + eId);
     dbFns.deleteRow({ tableName: 'events', where: { id: eId } });
     if (typeof onSave === 'function') onSave();
   }

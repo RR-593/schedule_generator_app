@@ -13,10 +13,6 @@ const EditableTextSpan = ({ initialText = 'New Training Schedule...', onSave }) 
     }
   }, [isEditing]);
 
-  useEffect(() => {
-    setText(initialText);
-  }, [initialText]);
-
   const handleFocus = () => {
     inputRef.current.select();
   };
@@ -27,22 +23,25 @@ const EditableTextSpan = ({ initialText = 'New Training Schedule...', onSave }) 
 
   const handleBlur = () => {
     setIsEditing(false);
-    if (text.trim() === "") {
-      setText(initialText);
-      onSave(initialText);
-    }
-    else if (onSave) onSave(text);
+    if (text.trim() === "") onSave(initialText);
+    else saveText();
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter') { // Save on 'enter'
       setIsEditing(false);
-      if (onSave) onSave(text);
-    } else if (e.key === 'Escape') {
+      saveText();
+    } else if (e.key === 'Escape') { // Revert changes on 'esc'
       setIsEditing(false);
-      setText(initialText); // Revert changes
+      setText(initialText);
     }
   };
+
+  const saveText = () => {
+    if (text === initialText) return;
+    if (onSave) onSave(text);
+    else console.error('onSave !== `function`');
+  }
 
   return (
     <>
