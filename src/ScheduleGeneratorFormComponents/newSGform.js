@@ -122,8 +122,8 @@ const TaskForm = () => {
   return (
     <div className='formBox'>
 
-      <div>
-        <div className='backButton' hidden>
+      <div className='navBar'>
+        <div className='backButton'>
           <img alt='Back Button' src={logo1} />
         </div>
         <div className="formHeading">

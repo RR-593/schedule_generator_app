@@ -4,26 +4,40 @@
   align-items: flex-end;
 }
 
-.formBox > *{
+.formBox > * {
   background-color: #00bcd4;
   border-radius: 13px 13px 0px 0px;
 }
 
-.backButton {
+.navBar {
+  display: flex;
   background-color: unset;
-  width: 130px;
+  width: 100%;
+  justify-content: space-between;
 }
-.backButton > img{
+
+.backButton {
+  display: flex;
+  justify-content: center; /* horizontally */
+  align-items: center; /* vertically */
+  height: inherit;
+  background-color: unset;
+  width: 55px;
+  margin: auto;
+}
+.backButton > img {
   width: inherit;
 }
 
 .formHeading {
+  background-color: #00bcd4;
+  border-radius: 13px 13px 0px 0px;
   display: block;
-  width: 400px;
-  padding: 20px;
+  width: 380px;
+  padding: 15px;
 }
 
-.formHeading h2{
+.formHeading h2 {
   margin: 0;
 }
 
@@ -35,5 +49,3 @@
   padding: 15px;
   border-radius: 13px 0px 0px 0px;
 }
-
-
