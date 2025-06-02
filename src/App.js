@@ -1,13 +1,30 @@
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import TaskForm from './ScheduleGeneratorFormComponents/newSGform';
-// import CalendarEvents from './UserCalanderComponents/CalendarEvents'
+import CalendarEvents from './UserCalanderComponents/CalendarEvents'; // <-- Create this page
 import './App.css';
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<TaskForm />} />
+        <Route path="/appleCalendar" element={<CalendarEvents />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   localStorage.clear();
+
   return (
     <div className="App">
-      {/* <CalendarEvents></CalendarEvents> */}
-      <TaskForm></TaskForm>
+      <Router>
+        <AnimatedRoutes />
+      </Router>
     </div>
   );
 }

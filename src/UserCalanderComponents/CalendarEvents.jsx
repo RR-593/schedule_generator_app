@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from 'framer-motion';
 
 export default function CalendarEvents() {
   const [events, setEvents] = useState([]);
@@ -11,7 +12,12 @@ export default function CalendarEvents() {
   }, []);
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -50 }}
+      transition={{ duration: 0.3 }}
+    >
       <h2>Upcoming Apple Calendar Events</h2>
       {events.length === 0 ? (
         <p>No upcoming events or permission denied.</p>
@@ -22,6 +28,6 @@ export default function CalendarEvents() {
           ))}
         </ul>
       )}
-    </div>
+    </motion.div>
   );
 }

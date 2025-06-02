@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from "react-router-dom";
 import EditableTextSpan from './EditableTextSpan';
 import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
@@ -48,6 +50,7 @@ const SortableExerciseCard = ({ event, onSave }) => {
 const TaskForm = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -120,10 +123,15 @@ const TaskForm = () => {
   }
 
   return (
-    <div className='formBox'>
-
+    <motion.div
+      className="formBox"
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 50 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className='navBar'>
-        <div className='backButton'>
+        <div className='backButton' onClick={() => navigate('/appleCalendar')}>
           <img alt='Back Button' src={logo1} />
         </div>
         <div className="formHeading">
@@ -132,6 +140,7 @@ const TaskForm = () => {
           </h2>
         </div>
       </div>
+
       <div className='formBody'>
         {loading ? (
           <p>Loading events...</p>
@@ -146,7 +155,7 @@ const TaskForm = () => {
         )}
         <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />
       </div>
-    </div >
+    </motion.div>
   );
 };
 
