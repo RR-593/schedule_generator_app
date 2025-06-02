@@ -86,7 +86,7 @@ createTable({
     { name: 'item_order', type: 'NUMBER' },
     { name: 'start', type: 'DATETIME' },
     { name: 'end', type: 'DATETIME' },
-    { name: 'notes', type: 'TEXT' },
+    { name: 'note', type: 'TEXT' },
     { name: 'flags', type: 'TEXT' }
   ]
 });

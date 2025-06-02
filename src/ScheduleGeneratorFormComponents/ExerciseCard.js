@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
 
-const ExerciseCard = ({exerciseData = {id: 0}, onSave }) => {
+const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   /** @type {{id: number, name: String, rep_set: String}} */
-  const initialData = {...exerciseData};
+  const initialData = { ...exerciseData };
 
   const [eTitle, setETitle] = useState(initialData.name || 'Exercise');
   const [eRepSet, setERepSet] = useState(initialData.rep_set || 'n×n or just n ...');
-  // const [eNotes, setENotes] = useState(initialData.note || 'Notes...');
+  const [eNote, setENote] = useState(initialData.note || '');
   const [eId, setExcerciseId] = useState(initialData.id || 0);
 
   const dbFns = window.db.dataBaseFns();
@@ -60,13 +60,22 @@ const ExerciseCard = ({exerciseData = {id: 0}, onSave }) => {
     saveData({ rep_set: data })
   }
 
+  const handleNoteSave = (data) => {
+    data = data.target.value;
+    if (data === (initialData.note || '')) return;
+    setENote(data);
+    saveData({ note: data })
+  }
+
   const saveData = (data) => {
+
+    console.log('saving');
     const eventsJSON = localStorage.getItem('currentCalenderEvents');
 
-    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, notes: String, flags: String}[]} */
+    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, note: String, flags: String}[]} */
     const events = eventsJSON ? JSON.parse(eventsJSON) : [];
 
-    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, notes: String, flags: String}} */
+    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, note: String, flags: String}} */
     let updatedEvent = events.find(event => event.id === initialData.id);
     let newId = 1;
 
@@ -92,7 +101,7 @@ const ExerciseCard = ({exerciseData = {id: 0}, onSave }) => {
         item_order: data.item_order || newOrder,
         start: 0,
         end: 0,
-        notes: '',
+        note: '',
         flags: ''
       };
 
@@ -171,8 +180,13 @@ const ExerciseCard = ({exerciseData = {id: 0}, onSave }) => {
             <p> </p>
             <EditableTextSpan initialText={eRepSet} onSave={handleRepSetSave} />
           </div>
-          {/* <EditableTextSpan initialText={eRepSet} onSave={handleRepSetSave} /> */}
-          <textarea placeholder="Notes..." />
+          {/* <EditableTextSpan className="noteBox" initialText={eNote} onSave={handleNoteSave} /> */}
+          <textarea
+            placeholder="Notes..."
+            value={eNote}
+            onChange={(e) => setENote(e.target.value)}
+            onBlur={handleNoteSave}
+          />
         </div>
       )}
 

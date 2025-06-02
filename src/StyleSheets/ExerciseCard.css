@@ -35,6 +35,10 @@
   transition: opacity 0.1s ease-in-out;
 }
 
+.noteBox {
+  height: 300px;
+}
+
 
 .card {
   display: flex;
