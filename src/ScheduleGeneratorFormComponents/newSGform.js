@@ -24,7 +24,19 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
+
 // Sortable ExerciseCard wrapper
+
+/**
+ * @typedef {Object} Event
+ * @property {number} id - Unique identifier for the event
+ * @property {string} name - Name of the exercise/event
+ * @property {string} rep_set - Reps and sets string for the exercise
+ */
+
+/**
+ * @param {{ event: Event, onSave: () => void }} props
+ */
 const SortableExerciseCard = ({ event, onSave }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: event.id.toString()
@@ -38,9 +50,7 @@ const SortableExerciseCard = ({ event, onSave }) => {
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <ExerciseCard
-        excerciseId={event.id}
-        escerciseTitle={event.name}
-        resSet={event.rep_set}
+        exerciseData={{ ...event }}
         onSave={onSave}
       />
     </div>

@@ -2,17 +2,21 @@ import React, { useState } from "react";
 import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
 
-const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSave }) => {
-  const [eTitle, setETitle] = useState(escerciseTitle.trim() !== '' ? escerciseTitle : 'Exercise');
-  const [eRepSet, setERepSet] = useState(resSet.trim() !== '' ? resSet : 'n×n or just n ...');
-  const [eId, setExcerciseId] = useState(excerciseId !== 0 ? excerciseId : 0);
+const ExerciseCard = ({exerciseData = {id: 0}, onSave }) => {
+  /** @type {{id: number, name: String, rep_set: String}} */
+  const initialData = {...exerciseData};
+
+  const [eTitle, setETitle] = useState(initialData.name || 'Exercise');
+  const [eRepSet, setERepSet] = useState(initialData.rep_set || 'n×n or just n ...');
+  // const [eNotes, setENotes] = useState(initialData.note || 'Notes...');
+  const [eId, setExcerciseId] = useState(initialData.id || 0);
 
   const dbFns = window.db.dataBaseFns();
 
   const patterns = [
     {
       regex: /^(\d+)x(\d+)$/,
-      replacer: ([, sets, reps]) => `${reps} reps x ${sets} sets`
+      replacer: ([, reps, sets]) => `${reps} reps x ${sets} sets`
     },
     {
       regex: /^(\d+)$/,
@@ -63,7 +67,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
     const events = eventsJSON ? JSON.parse(eventsJSON) : [];
 
     /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, notes: String, flags: String}} */
-    let updatedEvent = events.find(event => event.id === excerciseId);
+    let updatedEvent = events.find(event => event.id === initialData.id);
     let newId = 1;
 
     if (updatedEvent !== undefined) {
@@ -101,7 +105,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
     }
 
     // Log with current known id
-    console.log(`Exercise ID saved: ${excerciseId}`);
+    console.log(`Exercise ID saved: ${initialData.id}`);
 
     if (typeof onSave === 'function') onSave();
     else console.error('onSave !== `function`');
@@ -135,7 +139,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
 
   return (
     <div className="exerciseCard">
-      <div className="cardControls" hidden={excerciseId === 0}>
+      <div className="cardControls" hidden={initialData.id === 0}>
         <div className="delete" onClick={deleteData}>
           <Icon {...iconStyles}>
             <circle cx="6" cy="6" r="6" fill="#aacbce" />
@@ -167,6 +171,7 @@ const ExerciseCard = ({ excerciseId = 0, escerciseTitle = '', resSet = '', onSav
             <p> </p>
             <EditableTextSpan initialText={eRepSet} onSave={handleRepSetSave} />
           </div>
+          {/* <EditableTextSpan initialText={eRepSet} onSave={handleRepSetSave} /> */}
           <textarea placeholder="Notes..." />
         </div>
       )}
