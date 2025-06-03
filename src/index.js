@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import CustomTitleBar from './windowComponents/CustomTitleBar';
+import CustomTitleBar from './Components/windowComponents/CustomTitleBar';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

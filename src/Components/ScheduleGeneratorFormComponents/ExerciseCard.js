@@ -6,8 +6,8 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   /** @type {{id: number, name: String, rep_set: String}} */
   const initialData = { ...exerciseData };
 
-  const [eTitle, setETitle] = useState(initialData.name || 'Exercise');
-  const [eRepSet, setERepSet] = useState(initialData.rep_set || 'n×n or just n ...');
+  const [eTitle, setETitle] = useState(initialData.name || 'Type Exercise...');
+  const [eRepSet, setERepSet] = useState(initialData.rep_set || 'Type NxN or N...');
   const [eNote, setENote] = useState(initialData.note || '');
   const [eId, setExcerciseId] = useState(initialData.id || 0);
 

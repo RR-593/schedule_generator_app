@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import TaskForm from './ScheduleGeneratorFormComponents/newSGform';
-import CalendarEvents from './UserCalanderComponents/CalendarEvents'; // <-- Create this page
+import TaskForm from './Components/ScheduleGeneratorFormComponents/newSGform';
+import CalendarEvents from './Components/UserCalanderComponents/CalendarEvents'; // <-- Create this page
 import './App.css';
 
 function AnimatedRoutes() {

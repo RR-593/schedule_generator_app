@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import EditableTextSpan from './EditableTextSpan';
 import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
-import logo1 from '../Assests/Logo1.png';
+import logo1 from '../../Assests/Logo1.png';
 
 
 import {
