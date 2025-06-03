@@ -83,6 +83,8 @@ createTable({
     { name: 'id', type: 'NUMBER PRIMARY KEY' },
     { name: 'name', type: 'TEXT' },
     { name: 'rep_set', type: 'TEXT' },
+    { name: 'rep_time', type: 'NUMBER' }, //ms
+    { name: 'frequency', type: 'NUMBER' }, 
     { name: 'item_order', type: 'NUMBER' },
     { name: 'start', type: 'DATETIME' },
     { name: 'end', type: 'DATETIME' },

@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
-import CreatCalanderEvent from "../../StanderdisedObjects/CreatCalanderEvent"
+import newCalanderEvent from "../../StanderdisedObjects/newCalanderEvent"
 
 const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
-  /** @type {{id: number, name: String, rep_set: String}} */
-  const initialData = { ...exerciseData };
-  const eventObj = CreatCalanderEvent(initialData);
+  const eventObj = newCalanderEvent({ ...exerciseData });
 
-  const [eTitle, setETitle] = useState(initialData.name || 'Type Exercise...');
-  const [eRepSet, setERepSet] = useState(initialData.rep_set || 'Type NxN or N...');
-  const [eNote, setENote] = useState(initialData.note || '');
-  const [eId, setExcerciseId] = useState(initialData.id || 0);
+  const [calEvent, setcalendarEvent] = useState({ ...eventObj.data });
 
   const dbFns = window.db.dataBaseFns();
 
@@ -50,32 +45,21 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   const formatExercise = formatRepSet(patterns);
 
   const handleTitleSave = (data) => {
-    if (data === eTitle) return;
-    setETitle(data);
+    if (data === calEvent.name) return;
     saveData({ name: data })
   }
 
   const handleRepSetSave = (data) => {
     data = formatExercise(data);
-    if (data === eRepSet) return;
-    setERepSet(data);
+    if (data === calEvent.rep_set) return;
     saveData({ rep_set: data })
   }
 
-  const handleNoteSave = (data) => {
-    data = data.target.value;
-    if (data === (initialData.note || '')) return;
-    setENote(data);
-    saveData({ note: data })
-  }
-
   const saveData = (data) => {
-
-    eventObj.data = {...eventObj.data, ...data};
-
-    setExcerciseId(eventObj.data.id);
-
+    eventObj.data = { ...eventObj.data, ...data };
     eventObj.saveEvent();
+
+    setcalendarEvent({ ...eventObj.data })
 
     if (typeof onSave === 'function') onSave();
     else console.error('onSave !== `function`');
@@ -98,8 +82,8 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   };
 
   const deleteData = () => {
-    console.log('Deleting: ' + eId);
-    dbFns.deleteRow({ tableName: 'events', where: { id: eId } });
+    console.log('Deleting: ' + calEvent.id);
+    dbFns.deleteRow({ tableName: 'events', where: { id: calEvent.id } });
     if (typeof onSave === 'function') onSave();
   }
 
@@ -109,7 +93,7 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
 
   return (
     <div className="exerciseCard">
-      <div className="cardControls" hidden={initialData.id === 0}>
+      <div className="cardControls" hidden={eventObj.id === 0}>
         <div className="delete" onClick={deleteData}>
           <Icon {...iconStyles}>
             <circle cx="6" cy="6" r="6" fill="#aacbce" />
@@ -136,17 +120,17 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
         < div className="card" > {/* Generic Card */}
           <div className="details">
             <h3>
-              <EditableTextSpan initialText={eTitle} onSave={handleTitleSave} />
+              <EditableTextSpan initialText={calEvent.name} onSave={handleTitleSave} />
             </h3>
             <p> </p>
-            <EditableTextSpan initialText={eRepSet} onSave={handleRepSetSave} />
+            <EditableTextSpan initialText={calEvent.rep_set} onSave={handleRepSetSave} />
           </div>
           {/* <EditableTextSpan className="noteBox" initialText={eNote} onSave={handleNoteSave} /> */}
           <textarea
             placeholder="Notes..."
-            value={eNote}
-            onChange={(e) => setENote(e.target.value)}
-            onBlur={handleNoteSave}
+            value={calEvent.note}
+            onChange={(e) => setcalendarEvent({ ...calEvent, note: e.target.value })}
+            onBlur={(e) => saveData({ note: e.target.value.trim() })}
           />
         </div>
       )}
