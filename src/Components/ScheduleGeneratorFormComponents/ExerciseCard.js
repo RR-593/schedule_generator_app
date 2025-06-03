@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
+import CreatCalanderEvent from "../../StanderdisedObjects/CreatCalanderEvent"
 
 const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   /** @type {{id: number, name: String, rep_set: String}} */
   const initialData = { ...exerciseData };
+  const eventObj = CreatCalanderEvent(initialData);
 
   const [eTitle, setETitle] = useState(initialData.name || 'Type Exercise...');
   const [eRepSet, setERepSet] = useState(initialData.rep_set || 'Type NxN or N...');
@@ -69,52 +71,11 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
 
   const saveData = (data) => {
 
-    console.log('saving');
-    const eventsJSON = localStorage.getItem('currentCalenderEvents');
+    eventObj.data = {...eventObj.data, ...data};
 
-    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, note: String, flags: String}[]} */
-    const events = eventsJSON ? JSON.parse(eventsJSON) : [];
+    setExcerciseId(eventObj.data.id);
 
-    /** @type {{id: number, name: String, rep_set: String, item_order: number, start: number, end: number, note: String, flags: String}} */
-    let updatedEvent = events.find(event => event.id === initialData.id);
-    let newId = 1;
-
-    if (updatedEvent !== undefined) {
-      updatedEvent = { ...updatedEvent, ...data };
-      console.log(updatedEvent);
-      console.log(updatedEvent.id);
-
-      dbFns.updateRow({ tableName: 'events', data: { ...updatedEvent }, where: { id: updatedEvent.id } });
-    } else {
-      const existingIds = events.map(event => event.id);
-      while (existingIds.includes(newId)) newId++;
-
-      console.log(events);
-      let newOrder = 0
-      if (events.length > 0)
-        newOrder = events[events.length - 1].item_order + 1;
-
-      const newEvent = {
-        id: newId,
-        name: data.name || eTitle,
-        rep_set: data.rep_set || eRepSet,
-        item_order: data.item_order || newOrder,
-        start: 0,
-        end: 0,
-        note: '',
-        flags: ''
-      };
-
-      dbFns.insertInto({ tableName: 'events', data: newEvent });
-      setExcerciseId(newId); // Update local state after insert
-
-      // Avoid second update below
-      if (typeof onSave === 'function') onSave();
-      return;
-    }
-
-    // Log with current known id
-    console.log(`Exercise ID saved: ${initialData.id}`);
+    eventObj.saveEvent();
 
     if (typeof onSave === 'function') onSave();
     else console.error('onSave !== `function`');

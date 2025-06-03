@@ -139,7 +139,7 @@ ipcMain.handle('update-row', (event, { tableName, data, where }) => {
   const stmt = `UPDATE ${tableName} SET ${sets} WHERE ${whereClause}`;
   try {
     console.log(Date.now());
-    console.log(where);
+    console.log(`Where: ${JSON.stringify(where)}`);
     console.log(data);
     return db.prepare(stmt).run(...values);
   } catch (e) {
