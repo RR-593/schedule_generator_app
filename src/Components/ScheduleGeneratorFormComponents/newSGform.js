@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from "react-router-dom";
-import EditableTextSpan from './EditableTextSpan';
 import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
-import logo1 from '../../Assests/Logo1.png';
+import CalanderHeader from './CalanderHeader'
 
 
 import {
@@ -49,7 +47,6 @@ const SortableExerciseCard = ({ event, onSave }) => {
 const TaskForm = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -58,6 +55,10 @@ const TaskForm = () => {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  const handleNewEvent = () => {
+    fetchEvents();
+  };
 
   const fetchEvents = async () => {
     try {
@@ -93,14 +94,6 @@ const TaskForm = () => {
     });
   };
 
-  const handleSave = (newText) => {
-    console.log('Saved text:', newText);
-  };
-
-  const handleNewEvent = () => {
-    fetchEvents();
-  };
-
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -129,17 +122,7 @@ const TaskForm = () => {
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.3 }}
     >
-      <div className='navBar'>
-        <div className='backButton' onClick={() => navigate('/appleCalendar')}>
-          <img alt='Back Button' src={logo1} />
-        </div>
-        <div className="formHeading">
-          <h2>
-            <EditableTextSpan onSave={handleSave} />
-          </h2>
-        </div>
-      </div>
-
+      <CalanderHeader/>
       <div className='formBody'>
         {loading ? (
           <p>Loading events...</p>

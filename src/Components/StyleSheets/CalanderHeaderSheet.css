@@ -1,0 +1,38 @@
+.calenderHeader {
+  display: flex;
+  border-radius: 13px 13px 0px 0px;
+}
+
+input {
+  background: inherit;
+  border-width: 0px;
+  font: inherit;
+  padding: 0px;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.backButton {
+  display: flex;
+  justify-content: center; /* horizontally */
+  align-items: center; /* vertically */
+  height: inherit;
+  background-color: unset;
+  width: 55px;
+  /* margin: auto; */
+}
+.backButton > img {
+  width: inherit;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 5px 25px;
+}
