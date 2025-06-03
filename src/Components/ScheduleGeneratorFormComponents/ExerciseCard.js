@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import EditableTextSpan from "./EditableTextSpan";
 import "../StyleSheets/ExerciseCard.css";
 import newCalanderEvent from "../../StanderdisedObjects/newCalanderEvent"
+import getExerciseDefaultRepTime from "../../StanderdisedObjects/getExerciseDefaultRepTime"
 
 const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   const eventObj = newCalanderEvent({ ...exerciseData });
@@ -17,7 +18,7 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
     },
     {
       regex: /^(\d+)$/,
-      replacer: ([, sets]) => `${sets} sets`
+      replacer: ([, reps]) => `${reps} reps`
     },
     {
       regex: /^(\d+)\s*(x?w|w|week)$/i,
@@ -46,13 +47,21 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
 
   const handleTitleSave = (data) => {
     if (data === calEvent.name) return;
-    saveData({ name: data })
+    let repT = getExerciseDefaultRepTime(data)
+    console.log(repT);
+    saveData({ name: data, rep_time: repT })
   }
 
   const handleRepSetSave = (data) => {
     data = formatExercise(data);
     if (data === calEvent.rep_set) return;
     saveData({ rep_set: data })
+  }
+
+  const handleNotesSave = (e) => {
+    let data =  e.target.value.trim();
+    if (data === '') return;
+    saveData({ note: data})
   }
 
   const saveData = (data) => {
@@ -93,7 +102,7 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
 
   return (
     <div className="exerciseCard">
-      <div className="cardControls" hidden={eventObj.id === 0}>
+      <div className="cardControls" hidden={calEvent.id === 0}>
         <div className="delete" onClick={deleteData}>
           <Icon {...iconStyles}>
             <circle cx="6" cy="6" r="6" fill="#aacbce" />
@@ -130,7 +139,7 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
             placeholder="Notes..."
             value={calEvent.note}
             onChange={(e) => setcalendarEvent({ ...calEvent, note: e.target.value })}
-            onBlur={(e) => saveData({ note: e.target.value.trim() })}
+            onBlur={(e) => handleNotesSave(e)}
           />
         </div>
       )}

@@ -81,14 +81,28 @@ const createTable = ({ tableName, columns }) => {
 createTable({
   tableName: 'events', columns: [
     { name: 'id', type: 'NUMBER PRIMARY KEY' },
+    { name: 'calender_id', type: 'NUMBER' },
     { name: 'name', type: 'TEXT' },
     { name: 'rep_set', type: 'TEXT' },
     { name: 'rep_time', type: 'NUMBER' }, //ms
+    { name: 'set_rest', type: 'NUMBER' }, 
+    { name: 'total_time', type: 'NUMBER' }, 
     { name: 'frequency', type: 'NUMBER' }, 
     { name: 'item_order', type: 'NUMBER' },
     { name: 'start', type: 'DATETIME' },
     { name: 'end', type: 'DATETIME' },
     { name: 'note', type: 'TEXT' },
+    { name: 'flags', type: 'TEXT' }
+  ]
+});
+
+createTable({
+  tableName: 'userGeneratedCalenders', columns: [
+    { name: 'id', type: 'NUMBER PRIMARY KEY' },
+    { name: 'name', type: 'TEXT' },
+    { name: 'availablity', type: 'TEXT' }, 
+    { name: 'rest_length', type: 'NUMBER' }, 
+    { name: 'item_order', type: 'NUMBER' },
     { name: 'flags', type: 'TEXT' }
   ]
 });

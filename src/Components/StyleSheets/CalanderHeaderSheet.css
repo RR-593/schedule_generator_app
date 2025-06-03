@@ -1,6 +1,7 @@
 .calenderHeader {
   display: flex;
   border-radius: 13px 13px 0px 0px;
+  flex-direction: column;
 }
 
 input {
@@ -22,7 +23,6 @@ input:focus {
   height: inherit;
   background-color: unset;
   width: 55px;
-  /* margin: auto; */
 }
 .backButton > img {
   width: inherit;
@@ -30,9 +30,15 @@ input:focus {
 
 .row {
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
 
   padding: 5px 25px;
+}
+
+hr {
+  width: 60%;
+
+  border-style: solid;
+  border-color: #48cae4;
 }

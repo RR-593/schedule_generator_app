@@ -3,9 +3,12 @@
  * @returns {{
  *   data: {
  *     id: number,
+ *     calender_id: number,
  *     name: string,
  *     rep_set: string,
  *     rep_time: number,
+ *     set_rest: number,
+ *     total_time: number,
  *     frequency: number,
  *     item_order: number,
  *     start: number,
@@ -22,6 +25,9 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
     no_item_order = 0,
     no_name = 'Type Exercise...',
     no_rep_set = 'Type NxN or N...',
+    no_rep_time = 1000,
+    no_set_rest = 60000,
+    no_total_time = 0,
     no_note = '',
   } = fallback;
 
@@ -30,9 +36,12 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
   return {
     data: {
       id: data.id || no_id,
+      calender_id: 0,
       name: data.name || no_name,
       rep_set: data.rep_set || no_rep_set,
-      rep_time: data.rep_time || 5,
+      rep_time: data.rep_time || no_rep_time,
+      set_rest: data.set_rest || no_set_rest,
+      total_time: data.total_time || no_total_time,
       frequency: data.frequency || 1,
       item_order: data.item_order || no_item_order,
       start: data.start || 0,
@@ -52,9 +61,12 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
       /** 
        * @type {{
        *     id: number,
+       *     calender_id: number,
        *     name: string,
        *     rep_set: string,
        *     rep_time: number,
+       *     set_rest: number,
+       *     total_time: number,
        *     frequency: number,
        *     item_order: number,
        *     start: number,
@@ -68,6 +80,18 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
       let newId = 1;
 
       if (this.data.id !== 0) {
+
+        let str = this.data.rep_set;
+
+        let reps = str.match(/\d+/g)[0] || 1
+        let sets = str.match(/\d+/g)[1] || 1
+
+
+        // console.log(sets*1);
+
+        this.data.total_time = (reps * this.data.rep_time * sets) + ((sets - 1) * this.data.set_rest)
+        console.log(this.data.total_time);
+
         dbFns.updateRow({ tableName: 'events', data: this.data, where: { id: this.data.id } });
       } else {
         const existingIds = events.map(event => event.id);
