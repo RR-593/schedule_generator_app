@@ -4,7 +4,7 @@
 }
 
 .formBox > * {
-  background-color: #00bcd4;
+  background-color: var(--background-2);
 }
 
 .formBody {

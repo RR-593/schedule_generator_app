@@ -2,6 +2,7 @@
   display: flex;
   border-radius: 13px 13px 0px 0px;
   flex-direction: column;
+  background-color: var(--background-2);
 }
 
 input {
@@ -38,7 +39,7 @@ input:focus {
 
 hr {
   width: 60%;
-
+  height: 0;;
   border-style: solid;
   border-color: #48cae4;
 }

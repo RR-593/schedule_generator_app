@@ -15,7 +15,7 @@ remoteMain.initialize();
 function createWindow() {
   const win = new BrowserWindow({
     width: 1000,
-    height: 650,
+    height: 950,
     frame: false,
     webPreferences: {
       nodeIntegration: true, // Enable Node.js integration if needed

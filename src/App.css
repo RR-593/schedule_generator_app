@@ -8,6 +8,9 @@
     #03045e 0%,
     #0077b6 100%
   );
+
+  --background-2: #00bcd4;
+  --background-3: #186F8F;
 }
 
 .App-logo {

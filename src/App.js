@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import TaskForm from './Components/ScheduleGeneratorFormComponents/newSGform';
-import CalendarEvents from './Components/UserCalanderComponents/CalendarEvents'; // <-- Create this page
+import CalendarEvents from './Components/UserCalanderComponents/CalendarEvents';
+import PreviewTrainingSchedual from './Components/PreiveiwSchedualComponents/PreviewTrainingSchedual'
 import './App.css';
 
 function AnimatedRoutes() {
@@ -10,8 +11,9 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<TaskForm />} />
+        <Route path="/main" element={<TaskForm />} />
         <Route path="/appleCalendar" element={<CalendarEvents />} />
+        <Route path="/" element={<PreviewTrainingSchedual />} />
       </Routes>
     </AnimatePresence>
   );
