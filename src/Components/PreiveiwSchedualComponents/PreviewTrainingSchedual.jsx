@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import ExerciseTimeCard from './ExerciseTimeCard'
 import {
   DndContext,
   closestCenter,
@@ -12,7 +13,6 @@ import {
   verticalListSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
 import CalanderHeader from "../ScheduleGeneratorFormComponents/CalanderHeader";
 import "../StyleSheets/PreviewTrainingSchedual.css";
@@ -69,70 +69,6 @@ const TimeSlot = ({ label }) => (
   </div>
 );
 
-// 🧱 Sortable Exercise Block
-const ExerciseBlock = ({
-  item,
-  listeners,
-  attributes,
-  setNodeRef,
-  transform,
-  transition,
-  onResize,
-}) => {
-  const cardRef = useRef(null);
-  const [resizing, setResizing] = useState(false);
-
-  const startResize = (e) => {
-    e.preventDefault();
-    setResizing(true);
-    const startY = e.clientY;
-    const startHeight = cardRef.current.offsetHeight;
-
-    const handleMouseMove = (e) => {
-      const newHeight = startHeight + (e.clientY - startY);
-
-      // Snap height to nearest 40px
-      const snappedHeight = Math.round(newHeight / 40) * 40;
-      onResize(snappedHeight);
-    };
-
-    const stopResize = () => {
-      setResizing(false);
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", stopResize);
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", stopResize);
-  };
-
-  return (
-    <div
-      ref={(el) => {
-        setNodeRef(el);
-        cardRef.current = el;
-      }}
-      {...attributes}
-      {...listeners}
-      className={`exercise-block ${item.highlight ? "highlight" : ""}`}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        height: item.height ?? "80px",
-      }}
-    >
-      <div className="exercise-block-header">
-        <span>{item.title}</span>
-        <span>{item.reps}</span>
-      </div>
-      <div className="exercise-block-time">
-        🕒 {item.start} - {item.end}
-      </div>
-      {item.note && <div className="exercise-block-note">{item.note}</div>}
-      <div className="resize-handle" onMouseDown={startResize} />
-    </div>
-  );
-};
 
 // 📦 Make each block sortable
 const SortableExercise = ({ item, onResize }) => {
@@ -140,7 +76,7 @@ const SortableExercise = ({ item, onResize }) => {
     useSortable({ id: item.id });
 
   return (
-    <ExerciseBlock
+    <ExerciseTimeCard
       item={item}
       listeners={listeners}
       attributes={attributes}
