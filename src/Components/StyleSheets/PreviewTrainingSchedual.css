@@ -35,7 +35,7 @@
   justify-content: center;
   gap: 10px;
   align-items: center;
-  white-space: nowrap
+  white-space: nowrap;
 }
 
 .timeMark hr {
@@ -54,6 +54,8 @@
 
 .timeCards {
   position: absolute;
+  top: 20px;
+  left: 68px;
 }
 
 .exercise-block {
@@ -61,10 +63,6 @@
   background-color: #a5f3fc; /* Tailwind: bg-cyan-200 */
   color: #1e3a8a; /* Tailwind: text-blue-900 */
   border-radius: 0.5rem; /* Tailwind: rounded-lg */
-  padding: 0.5rem; /* Tailwind: p-2 */
-  margin-bottom: 0.5rem; /* Tailwind: mb-2 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind: shadow-md */
-  transition: transform 200ms ease;
   overflow: hidden;
 }
 

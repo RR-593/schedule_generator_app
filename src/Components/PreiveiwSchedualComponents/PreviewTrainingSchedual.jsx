@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import ExerciseTimeCard from './ExerciseTimeCard'
+import ExerciseTimeCard from "./ExerciseTimeCard";
+
 import {
   DndContext,
   closestCenter,
@@ -13,6 +14,8 @@ import {
   verticalListSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 import CalanderHeader from "../ScheduleGeneratorFormComponents/CalanderHeader";
 import "../StyleSheets/PreviewTrainingSchedual.css";
@@ -36,7 +39,7 @@ const initialSessionData = [
     end: "7:38 AM",
   },
   {
-    id: "3",
+    id: "6",
     title: "Sit-Ups",
     reps: "20×4",
     start: "7:38 AM",
@@ -70,27 +73,51 @@ const TimeSlot = ({ label }) => (
   </div>
 );
 
-
 // 📦 Make each block sortable
 const SortableExercise = ({ item, onResize }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: item.id });
 
-  return (
-    <ExerciseTimeCard
-      item={item}
-      listeners={listeners}
-      attributes={attributes}
-      setNodeRef={setNodeRef}
-      transform={transform}
-      transition={transition}
-      onResize={(newHeight) => onResize(item.id, newHeight)}
-    />
-  );
+  if (item.title)
+    return (
+      <ExerciseTimeCard
+        item={item}
+        listeners={listeners}
+        attributes={attributes}
+        setNodeRef={setNodeRef}
+        transform={transform}
+        transition={transition}
+        onResize={(newHeight) => onResize(item.id, newHeight)}
+      />
+    );
+  else
+    return (
+      <div
+        ref={(el) => {
+          setNodeRef(el);
+        }}
+        {...listeners}
+        {...attributes}
+        style={{
+          height: `${item.height}px`,
+          backgroundColor: "white",
+          transform: CSS.Transform.toString(transform),
+          transition,
+        }}
+      ></div>
+    );
 };
 
 const SessionView = () => {
-  const [sessionData, setSessionData] = useState(initialSessionData);
+  const displayCardAmount = 8;
+  const sData = Array.from({ length: displayCardAmount-1 }, (v, k) => k + 1).map(
+    (numberId, idx) => {
+      let found = initialSessionData.find((item) => item.id === numberId + "");
+      return found ?? { id: numberId };
+    }
+  );
+
+  const [sessionData, setSessionData] = useState(sData);
   const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
   const myRef = useRef(null);
 
@@ -103,7 +130,7 @@ const SessionView = () => {
   };
 
   useEffect(() => {
-    console.log(myRef);
+    // console.log(myRef);
     if (myRef.current) {
       const style = window.getComputedStyle(myRef.current);
       const y = myRef.current.getBoundingClientRect().top;
@@ -147,10 +174,15 @@ const SessionView = () => {
 
         <div className="exerciseTimeline">
           {/* Time Labels */}
-          <div className="timmings">
-            {createTimeSlots("05:50", 12, 10).map((time, idx) => (
-              <TimeSlot key={idx} label={time} />
-            ))}
+          <div
+            className="timmings"
+            style={{ gap: `${bodyHeight / displayCardAmount - 40}px` }}
+          >
+            {createTimeSlots("05:50", displayCardAmount, 10).map(
+              (time, idx) => (
+                <TimeSlot key={idx} label={time} />
+              )
+            )}
           </div>
 
           {/* Exercise Timeline */}
@@ -159,6 +191,7 @@ const SessionView = () => {
               sensors={sensors}
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis]}
             >
               <SortableContext
                 items={sessionData.map((item) => item.id)}
@@ -168,7 +201,7 @@ const SessionView = () => {
                   {sessionData.map((item) => (
                     <SortableExercise
                       key={item.id}
-                      item={item}
+                      item={{ ...item, height: bodyHeight / displayCardAmount }}
                       onResize={handleResize}
                     />
                   ))}
