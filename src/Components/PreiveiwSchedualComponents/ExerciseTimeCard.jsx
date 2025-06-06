@@ -46,7 +46,7 @@ export default function ExerciseTimeCard({
         className="exercise-block"
         style={{
           height: item.height ?? "180px",
-          top: "10px",
+          left: "15px"
         }}
       >
         <div className="exercise-block-header">

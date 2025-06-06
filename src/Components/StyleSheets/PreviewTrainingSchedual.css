@@ -24,7 +24,6 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 25px;
 
   width: -webkit-fill-available;
 }
@@ -55,7 +54,7 @@
 .timeCards {
   position: absolute;
   width: -webkit-fill-available;
-  top: 20px;
+  top: 21px;
   left: 68px;
 
   pointer-events: none;

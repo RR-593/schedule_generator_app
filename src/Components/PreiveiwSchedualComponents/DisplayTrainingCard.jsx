@@ -55,7 +55,7 @@ const SortableExercise = ({ item, onResize }) => {
         {...attributes}
         style={{
           height: `${item.height / 5}px`,
-          opacity: 0.2,
+          opacity: 0,
           zIndex:-1,
           pointerEvents: "none",
           backgroundColor: "white",
