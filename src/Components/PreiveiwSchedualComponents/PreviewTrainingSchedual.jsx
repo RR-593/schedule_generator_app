@@ -69,16 +69,18 @@ const SessionView = () => {
       const structuredData = fetchedEvents.map((item) => {
         let interval = item.total_time;
 
-        // let hourDiff = (st.hour - startTime.hour) * 2;
-        let minDiff = Math.abs(st.minute - startTime.minute);
+        // let hourDiff = (st.hour - startTime.hour) ;
+        let minDiff = st.diff(startTime , 'minute').minutes;
 
-        // console.log(minDiff);
+        console.log(minDiff);
 
         let endTime = st.plus({ millisecond: interval });
 
 
         let startSpan = Math.floor((minDiff / timeInterval) * 5) + 1;
         let span = Math.floor((interval / 1000 / 60 / timeInterval) * 4);
+
+        // console.log(minDiff);
 
 
         item = { ...item, start: st.toFormat("h:mm a"), end: endTime.toFormat("h:mm a"), startPan: startSpan, span: span };
