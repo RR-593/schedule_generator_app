@@ -54,6 +54,7 @@
 
 .timeCards {
   position: absolute;
+  width: -webkit-fill-available;
   top: 20px;
   left: 68px;
 }
@@ -64,6 +65,10 @@
   color: #1e3a8a; /* Tailwind: text-blue-900 */
   border-radius: 0.5rem; /* Tailwind: rounded-lg */
   overflow: hidden;
+}
+
+.isOverlay {
+  opacity: 0.3;
 }
 
 .exercise-block.highlight {

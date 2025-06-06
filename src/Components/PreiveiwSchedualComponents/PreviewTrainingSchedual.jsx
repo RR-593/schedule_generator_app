@@ -7,6 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragOverlay,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -30,6 +31,7 @@ const initialSessionData = [
     end: "7:23 AM",
     note: "notes...",
     highlight: false,
+    span: 7,
   },
   {
     id: "2",
@@ -37,6 +39,7 @@ const initialSessionData = [
     reps: "20×4",
     start: "7:23 AM",
     end: "7:38 AM",
+    span: 5,
   },
   {
     id: "6",
@@ -44,6 +47,7 @@ const initialSessionData = [
     reps: "20×4",
     start: "7:38 AM",
     end: "7:53 AM",
+    span: 3,
   },
 ];
 
@@ -75,8 +79,10 @@ const TimeSlot = ({ label }) => (
 
 // 📦 Make each block sortable
 const SortableExercise = ({ item, onResize }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition,isDragging } =
     useSortable({ id: item.id });
+
+  if (transform) transform.scaleY = 1;
 
   if (item.title)
     return (
@@ -87,6 +93,7 @@ const SortableExercise = ({ item, onResize }) => {
         setNodeRef={setNodeRef}
         transform={transform}
         transition={transition}
+        isDragging={isDragging}
         onResize={(newHeight) => onResize(item.id, newHeight)}
       />
     );
@@ -99,8 +106,8 @@ const SortableExercise = ({ item, onResize }) => {
         {...listeners}
         {...attributes}
         style={{
-          height: `${item.height}px`,
-          backgroundColor: "white",
+          height: `${item.height / 5}px`,
+          backgroundColor: "none",
           transform: CSS.Transform.toString(transform),
           transition,
         }}
@@ -110,15 +117,20 @@ const SortableExercise = ({ item, onResize }) => {
 
 const SessionView = () => {
   const displayCardAmount = 8;
-  const sData = Array.from({ length: displayCardAmount-1 }, (v, k) => k + 1).map(
-    (numberId, idx) => {
-      let found = initialSessionData.find((item) => item.id === numberId + "");
-      return found ?? { id: numberId };
-    }
-  );
+  const totalSpanCovered = initialSessionData.reduce((a, i) => a + i.span, 0);
+  const sData = Array.from(
+    { length: (displayCardAmount - 1) * 5 - totalSpanCovered },
+    (v, k) => k + 1
+  ).map((numberId) => {
+    let found = initialSessionData.find((item) => item.id === numberId + "");
+    return found ?? { id: numberId };
+  });
 
   const [sessionData, setSessionData] = useState(sData);
   const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
+  const [activeId, setActiveId] = useState(null);
+  const activeItem = sessionData.find((item) => item.id === activeId);
+
   const myRef = useRef(null);
 
   const handleResize = (id, newHeight) => {
@@ -149,7 +161,13 @@ const SessionView = () => {
     })
   );
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+    console.log(event.active);
+  };
+
   const handleDragEnd = (event) => {
+    setActiveId(null);
     const { active, over } = event;
 
     if (active.id !== over?.id) {
@@ -178,7 +196,7 @@ const SessionView = () => {
             className="timmings"
             style={{ gap: `${bodyHeight / displayCardAmount - 40}px` }}
           >
-            {createTimeSlots("05:50", displayCardAmount, 10).map(
+            {createTimeSlots("05:50", displayCardAmount, 30).map(
               (time, idx) => (
                 <TimeSlot key={idx} label={time} />
               )
@@ -189,6 +207,7 @@ const SessionView = () => {
           <div className="timeCards">
             <DndContext
               sensors={sensors}
+              onDragStart={handleDragStart}
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis]}
@@ -197,16 +216,24 @@ const SessionView = () => {
                 items={sessionData.map((item) => item.id)}
                 strategy={verticalListSortingStrategy}
               >
-                <div className="">
-                  {sessionData.map((item) => (
-                    <SortableExercise
-                      key={item.id}
-                      item={{ ...item, height: bodyHeight / displayCardAmount }}
-                      onResize={handleResize}
-                    />
-                  ))}
-                </div>
+                {sessionData.map((item) => (
+                  <SortableExercise
+                    key={item.id}
+                    item={{
+                      ...item,
+                      height: item.span
+                        ? item.span * (bodyHeight / displayCardAmount / 5)
+                        : bodyHeight / displayCardAmount,
+                    }}
+                    onResize={handleResize}
+                  />
+                ))}
               </SortableContext>
+              <DragOverlay>
+                {activeItem ? (
+                  <ExerciseTimeCard item={activeItem} isOverlay={true} />
+                ) : null}
+              </DragOverlay>
             </DndContext>
           </div>
         </div>

@@ -10,6 +10,8 @@ export default function ExerciseTimeCard({
   transform,
   transition,
   onResize,
+  isDragging,
+  isOverlay = false,
 }) {
   const cardRef = useRef(null);
   const [resizing, setResizing] = useState(false);
@@ -38,6 +40,25 @@ export default function ExerciseTimeCard({
     document.addEventListener("mouseup", stopResize);
   };
 
+  if (isOverlay)
+    return (
+      <div
+        className="exercise-block"
+        style={{
+          height: item.height ?? "80px",
+        }}
+      >
+        <div className="exercise-block-header">
+          <span>{item.title}</span>
+          <span>{item.reps}</span>
+        </div>
+        <div className="exercise-block-time">
+          🕒 {item.start} - {item.end}
+        </div>
+        {item.note && <div className="exercise-block-note">{item.note}</div>}
+      </div>
+    );
+
   return (
     <div
       ref={(el) => {
@@ -46,22 +67,25 @@ export default function ExerciseTimeCard({
       }}
       {...attributes}
       {...listeners}
-      className={`exercise-block ${item.highlight ? "highlight" : ""}`}
+      className={`exercise-block`}
       style={{
+        opacity: isDragging ? 0.3 : 1,
         transform: CSS.Transform.toString(transform),
-        transition,
+        transition: isDragging ? transition:'none',
         height: item.height ?? "80px",
       }}
     >
-      <div className="exercise-block-header">
-        <span>{item.title}</span>
-        <span>{item.reps}</span>
+      <div hidden={isDragging}>
+        <div className="exercise-block-header">
+          <span>{item.title}</span>
+          <span>{item.reps}</span>
+        </div>
+        <div className="exercise-block-time">
+          🕒 {item.start} - {item.end}
+        </div>
+        {item.note && <div className="exercise-block-note">{item.note}</div>}
+        <div className="resize-handle" onMouseDown={startResize} />
       </div>
-      <div className="exercise-block-time">
-        🕒 {item.start} - {item.end}
-      </div>
-      {item.note && <div className="exercise-block-note">{item.note}</div>}
-      <div className="resize-handle" onMouseDown={startResize} />
     </div>
   );
 }
