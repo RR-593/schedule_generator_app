@@ -16,7 +16,7 @@ export default function ExerciseTimeCard({
   const cardRef = useRef(null);
   const [resizing, setResizing] = useState(false);
 
-  console.log(item);
+  // console.log(item);
 
   const startResize = (e) => {
     e.preventDefault();
@@ -42,8 +42,8 @@ export default function ExerciseTimeCard({
     document.addEventListener("mouseup", stopResize);
   };
 
-  console.log(isOverlay);
-  
+  // console.log(isOverlay);
+
   if (isOverlay)
     return (
       <div
@@ -87,7 +87,7 @@ export default function ExerciseTimeCard({
           <span>{item.rep_set}</span>
         </div>
         <div className="exercise-block-time">
-          🕒 {item.start} - {`item.end`}
+          🕒 {item.start} - {item.end}
         </div>
         {item.note && <div className="exercise-block-note">{item.note}</div>}
         <div className="resize-handle" onMouseDown={startResize} />

@@ -1,7 +1,7 @@
 const createTimeSlots = (startTime, numOfMarks = 12, interval = 10) => {
   const timeSlots = [];
 
-  startTime = startTime.minus({ hours: 1 });
+  // startTime = startTime.minus({ hours: 1 });
 
   for (let i = 0; i < numOfMarks; i++) {
     timeSlots.push(startTime.toFormat("h:mm a"));

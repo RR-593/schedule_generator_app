@@ -65,12 +65,18 @@ const SessionView = () => {
 
       const structuredData = fetchedEvents.map((item) => {
         st = st.plus({ minutes: interval });
-        item = { ...item, start: st.toFormat("h:mm a"), startPan: 5 * 3 + 1, span: 4 * 2 };
+        let hourDiff = (st.hour - startTime.hour) * 2;
+        let minDiff = st.minute - startTime.minute;
+
+        let endTime = st.plus({ millisecond: 315000 });
+
+        console.log(endTime.toFormat("h:mm a"));
+        item = { ...item, start: st.toFormat("h:mm a"), end: endTime.toFormat("h:mm a"), startPan: 5 * (hourDiff + minDiff) + 1, span: 4 * 2 };
         const resultArr = Array.from({ length: (displayCardAmount - 1) * 5 - item.span - 1 }, (v, k) => k + 1).map((arrayorder) => {
           return item.startPan === arrayorder
             ? {
                 ...item,
-                id: item.id+"",
+                id: item.id + "",
                 height: item.span ? item.span * (cardHeight() / 5) : cardHeight(),
               }
             : { id: arrayorder };
