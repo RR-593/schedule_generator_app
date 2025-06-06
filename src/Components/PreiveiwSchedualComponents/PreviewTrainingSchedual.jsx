@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import DisplayTrainingCard from "./DisplayTrainingCard";
+import TimeMarkings from "./TimeMarkings"
 import { DateTime } from "luxon";
 
 import CalanderHeader from "../ScheduleGeneratorFormComponents/CalanderHeader";
@@ -16,8 +17,8 @@ const initialSessionData = [
     note: "notes...",
     highlight: false,
     total_time: 1800000,
-    startPan: 5*3 +1,
-    span: 4*2
+    startPan: 5 * 3 + 1,
+    span: 4 * 2,
   },
   {
     id: "2",
@@ -26,8 +27,8 @@ const initialSessionData = [
     start: "7:30 AM",
     end: "9:00 AM",
     total_time: 1800000,
-    startPan: 5*5 +1,
-    span: 4*3
+    startPan: 5 * 5 + 1,
+    span: 4 * 3,
   },
   {
     id: "6",
@@ -36,30 +37,10 @@ const initialSessionData = [
     start: "9:30 AM",
     end: "10:00 AM",
     total_time: 1800000,
-    startPan: 5*8 +1,
-    span: 4*3
+    startPan: 5 * 8 + 1,
+    span: 4 * 3,
   },
 ];
-
-const createTimeSlots = (startTime, numOfMarks = 12, interval = 10) => {
-  const timeSlots = [];
-
-  startTime = startTime.minus({ hours: 1 });
-
-  for (let i = 0; i < numOfMarks; i++) {
-    timeSlots.push(startTime.toFormat("h:mm a"));
-    startTime = startTime.plus({ minutes: interval });
-  }
-
-  return timeSlots;
-};
-
-const TimeSlot = ({ label }) => (
-  <div className="timeMark">
-    <span>{label}</span>
-    <hr />
-  </div>
-);
 
 const SessionView = () => {
   const displayCardAmount = 12;
@@ -124,13 +105,11 @@ const SessionView = () => {
 
         <div className="exerciseTimeline">
           {/* Time Labels */}
-          <div className="timmings" style={{ gap: `${cardHeight() - 40}px` }}>
-            {createTimeSlots(startDate, displayCardAmount, 30).map(
-              (time, idx) => (
-                <TimeSlot key={idx} label={time} />
-              )
-            )}
-          </div>
+          <TimeMarkings
+            startDate={startDate}
+            displayCardAmount={displayCardAmount}
+            cardHeight={cardHeight}
+          />
 
           {sData.map((data, idx) => (
             <DisplayTrainingCard

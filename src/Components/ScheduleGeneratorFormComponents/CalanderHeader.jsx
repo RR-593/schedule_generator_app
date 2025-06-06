@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import EditableTextSpan from "./EditableTextSpan";
 import logo1 from "../../Assests/Logo1.png";
@@ -7,14 +7,14 @@ import logo1 from "../../Assests/Logo1.png";
 import "../StyleSheets/CalanderHeaderSheet.css";
 
 function CalanderHeader() {
+  const navigate = useNavigate();
   // const calanderObj = newCalanderEvent({ ...exerciseData });
 
   const [isPreview, setIsPreview] = useState(true);
   return (
     <div className="calenderHeader">
       <div className="row">
-        <div className="backButton">
-          {/*onClick={() => navigate("/appleCalendar")}*/}
+        <div className="backButton" onClick={() => navigate("/")}>
           <img alt="Back Button" src={logo1} />
         </div>
 
@@ -26,7 +26,7 @@ function CalanderHeader() {
 
         {isPreview ? (
           <div className="previewCalenderButton">
-            <span>Preview</span>
+            <span onClick={() => navigate("/preview")}>Preview</span>
           </div>
         ) : (
           <div className="syncCalenderButton">
@@ -34,10 +34,8 @@ function CalanderHeader() {
           </div>
         )}
       </div>
-      <hr/>
-      <div className="row">
-
-      </div>
+      <hr />
+      <div className="row"></div>
     </div>
   );
 }

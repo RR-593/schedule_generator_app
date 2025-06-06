@@ -31,15 +31,15 @@ input:focus {
 
 .row {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 
-  padding: 5px 25px;
+  padding: 5px 0px;
 }
 
 hr {
   width: 60%;
-  height: 0;;
+  height: 0;
   border-style: solid;
   border-color: #48cae4;
 }
