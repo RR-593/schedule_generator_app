@@ -10,35 +10,41 @@ const initialSessionData = [
   {
     id: "1",
     title: "Pull-Ups",
-    reps: "10×10",
+    reps: "10x10",
     start: "6:30 AM",
-    end: "7:23 AM",
+    end: "7:30 AM",
     note: "notes...",
     highlight: false,
-    span: 8,
+    total_time: 1800000,
+    startPan: 5*3 +1,
+    span: 4*2
   },
   {
     id: "2",
     title: "Push-Ups",
-    reps: "20×4",
-    start: "7:23 AM",
-    end: "7:38 AM",
-    span: 4,
+    reps: "20x4",
+    start: "7:30 AM",
+    end: "9:00 AM",
+    total_time: 1800000,
+    startPan: 5*5 +1,
+    span: 4*3
   },
   {
     id: "6",
     title: "Sit-Ups",
-    reps: "20×4",
-    start: "7:38 AM",
-    end: "7:53 AM",
-    span: 3,
+    reps: "20x4",
+    start: "9:30 AM",
+    end: "10:00 AM",
+    total_time: 1800000,
+    startPan: 5*8 +1,
+    span: 4*3
   },
 ];
 
 const createTimeSlots = (startTime, numOfMarks = 12, interval = 10) => {
   const timeSlots = [];
 
-  startTime = startTime.minus({ hours: 1, minutes: 30 });
+  startTime = startTime.minus({ hours: 1 });
 
   for (let i = 0; i < numOfMarks; i++) {
     timeSlots.push(startTime.toFormat("h:mm a"));
@@ -74,10 +80,10 @@ const SessionView = () => {
 
   const sData = initialSessionData.map((item) => {
     const resultArr = Array.from(
-      { length: (displayCardAmount - 1) * 5 - item.span -1},
+      { length: (displayCardAmount - 1) * 5 - item.span - 1 },
       (v, k) => k + 1
     ).map((numberId) => {
-      return item.id === numberId + ""
+      return item.startPan === numberId
         ? {
             ...item,
             height: item.span ? item.span * (cardHeight() / 5) : cardHeight(),

@@ -54,7 +54,7 @@
 .timeCards {
   position: absolute;
   width: -webkit-fill-available;
-  top: 21px;
+  top: 22px;
   left: 68px;
 
   pointer-events: none;

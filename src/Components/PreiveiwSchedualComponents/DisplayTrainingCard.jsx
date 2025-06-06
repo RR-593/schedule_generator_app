@@ -105,9 +105,9 @@ const DisplayTrainingCard = ({ data, cardHeight }) => {
           items={sessionData.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
         >
-          {sessionData.map((item) => (
+          {sessionData.map((item,idx) => (
             <SortableExercise
-              key={item.id}
+              key={idx}
               item={{
                 ...item,
                 height: item.height ?? cardHeight(),
