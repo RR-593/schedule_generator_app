@@ -3,7 +3,7 @@ import ExerciseTimeCard from "./ExerciseTimeCard";
 
 import {
   DndContext,
-  closestCenter,
+  closestCorners,
   PointerSensor,
   useSensor,
   useSensors,
@@ -39,7 +39,7 @@ const initialSessionData = [
     reps: "20×4",
     start: "7:23 AM",
     end: "7:38 AM",
-    span: 5,
+    span: 4,
   },
   {
     id: "6",
@@ -79,8 +79,14 @@ const TimeSlot = ({ label }) => (
 
 // 📦 Make each block sortable
 const SortableExercise = ({ item, onResize }) => {
-  const { attributes, listeners, setNodeRef, transform, transition,isDragging } =
-    useSortable({ id: item.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
 
   if (transform) transform.scaleY = 1;
 
@@ -107,7 +113,8 @@ const SortableExercise = ({ item, onResize }) => {
         {...attributes}
         style={{
           height: `${item.height / 5}px`,
-          backgroundColor: "none",
+          opacity: 0.2,
+          backgroundColor: "white",
           transform: CSS.Transform.toString(transform),
           transition,
         }}
@@ -117,17 +124,25 @@ const SortableExercise = ({ item, onResize }) => {
 
 const SessionView = () => {
   const displayCardAmount = 8;
+  const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
+
   const totalSpanCovered = initialSessionData.reduce((a, i) => a + i.span, 0);
   const sData = Array.from(
     { length: (displayCardAmount - 1) * 5 - totalSpanCovered },
     (v, k) => k + 1
   ).map((numberId) => {
     let found = initialSessionData.find((item) => item.id === numberId + "");
-    return found ?? { id: numberId };
+    return found
+      ? {
+          ...found,
+          height: found.span
+            ? found.span * (bodyHeight / displayCardAmount / 5)
+            : bodyHeight / displayCardAmount,
+        }
+      : { id: numberId };
   });
 
   const [sessionData, setSessionData] = useState(sData);
-  const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
   const [activeId, setActiveId] = useState(null);
   const activeItem = sessionData.find((item) => item.id === activeId);
 
@@ -208,7 +223,7 @@ const SessionView = () => {
             <DndContext
               sensors={sensors}
               onDragStart={handleDragStart}
-              collisionDetection={closestCenter}
+              collisionDetection={closestCorners}
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis]}
             >
@@ -221,9 +236,7 @@ const SessionView = () => {
                     key={item.id}
                     item={{
                       ...item,
-                      height: item.span
-                        ? item.span * (bodyHeight / displayCardAmount / 5)
-                        : bodyHeight / displayCardAmount,
+                      height: item.height ?? bodyHeight / displayCardAmount,
                     }}
                     onResize={handleResize}
                   />
