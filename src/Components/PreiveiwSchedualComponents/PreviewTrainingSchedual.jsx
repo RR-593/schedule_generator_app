@@ -44,23 +44,24 @@ const initialSessionData = [
   },
 ];
 
-const timeSlots = [
-  "5:50 am",
-  "6:00 am",
-  "6:10 am",
-  "6:20 am",
-  "6:30 am",
-  "6:40 am",
-  "6:50 am",
-  "7:00 am",
-  "7:10 am",
-  "7:20 am",
-  "7:30 am",
-  "7:40 am",
-  "7:50 am",
-  "8:00 am",
-  "8:20 am",
-];
+const createTimeSlots = (startTime, numOfMakrs = 12, interval = 10) => {
+  const timeSlots = [];
+  const start = new Date(`1970-01-01T${startTime}`);
+
+  let time = start;
+  while (numOfMakrs-- > 0) {
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const ampm = hours >= 12 ? "pm" : "am";
+    const formattedTime = `${hours % 12 || 12}:${minutes
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
+    timeSlots.push(formattedTime);
+    time.setMinutes(time.getMinutes() + interval);
+  }
+
+  return timeSlots;
+};
 
 const TimeSlot = ({ label }) => (
   <div className="timeMark">
@@ -147,7 +148,7 @@ const SessionView = () => {
         <div className="exerciseTimeline">
           {/* Time Labels */}
           <div className="timmings">
-            {timeSlots.map((time, idx) => (
+            {createTimeSlots("05:50", 12, 10).map((time, idx) => (
               <TimeSlot key={idx} label={time} />
             ))}
           </div>
