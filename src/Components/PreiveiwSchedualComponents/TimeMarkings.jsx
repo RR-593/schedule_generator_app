@@ -18,7 +18,7 @@ const TimeSlot = ({ label }) => (
   </div>
 );
 
-const TimeMarkings = ({startDate,displayCardAmount,cardHeight}) => {
+const TimeMarkings = ({ startDate, displayCardAmount, cardHeight }) => {
   return (
     <div className="timmings" style={{ gap: `${cardHeight() - 40}px` }}>
       {createTimeSlots(startDate, displayCardAmount, 30).map((time, idx) => (
@@ -29,5 +29,3 @@ const TimeMarkings = ({startDate,displayCardAmount,cardHeight}) => {
 };
 
 export default TimeMarkings;
-
-

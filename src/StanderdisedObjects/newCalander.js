@@ -30,6 +30,7 @@ export default function newCalander(data = {}, fallback = {}) {
       item_order: data.item_order || no_item_order,
       flags: data.flags || ''
     },
+    
 
     /**
      * Saves the event data to localStorage and database. If the event has an ID, it updates; otherwise, inserts a new one.

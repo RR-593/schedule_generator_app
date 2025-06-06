@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
 import CalanderHeader from './CalanderHeader'
+import fetchEvents from '../../StanderdisedObjects/fectchEvents'
 
 
 import {
@@ -53,30 +54,13 @@ const TaskForm = () => {
   );
 
   useEffect(() => {
-    fetchEvents();
+    fetchEvents(setEvents, setLoading);
   }, []);
 
   const handleNewEvent = () => {
-    fetchEvents();
+    fetchEvents(setEvents, setLoading);
   };
 
-  const fetchEvents = async () => {
-    try {
-      const dbFns = window.db.dataBaseFns();
-      const result = await dbFns.selectAll('events');
-      if (result.length > 0) {
-        setEvents(result);
-        localStorage.setItem('currentCalenderEvents', JSON.stringify(result));
-      } else {
-        localStorage.removeItem('currentCalenderEvents');
-        setEvents([]);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const reOrderEvents = () => {
     // console.log('reordering');
@@ -122,7 +106,7 @@ const TaskForm = () => {
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.3 }}
     >
-      <CalanderHeader/>
+      <CalanderHeader />
       <div className='formBody'>
         {loading ? (
           <p>Loading events...</p>

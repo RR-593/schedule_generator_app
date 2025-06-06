@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import DisplayTrainingCard from "./DisplayTrainingCard";
-import TimeMarkings from "./TimeMarkings"
+import TimeMarkings from "./TimeMarkings";
+// import newCalanderEvent from "../../StanderdisedObjects/newCalanderEvent";
+import fetchEvents from "../../StanderdisedObjects/fectchEvents";
 import { DateTime } from "luxon";
 
 import CalanderHeader from "../ScheduleGeneratorFormComponents/CalanderHeader";
@@ -42,50 +44,49 @@ const initialSessionData = [
   },
 ];
 
+if (initialSessionData) console.log();
+
 const SessionView = () => {
-  const displayCardAmount = 12;
+  const [loading, setLoading] = useState(true);
+  const [sData, setSData] = useState([]);
   const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
+
+  const displayCardAmount = 12;
   const cardHeight = () => (bodyHeight - 30) / displayCardAmount;
-
-  const parsedTimes = initialSessionData.map((t) => ({
-    ...t,
-    dt: DateTime.fromFormat(t.start, "h:mm a"),
-  }));
-
-  // Find the earliest time
-  const startDate = parsedTimes.reduce((earliestSoFar, current) =>
-    current.dt < earliestSoFar.dt ? current : earliestSoFar
-  ).dt;
-
-  // const totalSpanCovered = initialSessionData.reduce((a, i) => a + i.span, 0);
-
-  const sData = initialSessionData.map((item) => {
-    const resultArr = Array.from(
-      { length: (displayCardAmount - 1) * 5 - item.span - 1 },
-      (v, k) => k + 1
-    ).map((numberId) => {
-      return item.startPan === numberId
-        ? {
-            ...item,
-            height: item.span ? item.span * (cardHeight() / 5) : cardHeight(),
-          }
-        : { id: numberId };
-    });
-    return resultArr;
-  });
+  const startTime = DateTime.fromFormat("6:30 AM", "h:mm a");
 
   const myRef = useRef(null);
 
   useEffect(() => {
+    fetchEvents((fetchedEvents) => {
+      // setEvents(fetchedEvents);
+      let st = startTime;
+      let interval = 60;
+
+      const structuredData = fetchedEvents.map((item) => {
+        st = st.plus({ minutes: interval });
+        item = { ...item, start: st.toFormat("h:mm a"), startPan: 5 * 3 + 1, span: 4 * 2 };
+        const resultArr = Array.from({ length: (displayCardAmount - 1) * 5 - item.span - 1 }, (v, k) => k + 1).map((arrayorder) => {
+          return item.startPan === arrayorder
+            ? {
+                ...item,
+                id: item.id+"",
+                height: item.span ? item.span * (cardHeight() / 5) : cardHeight(),
+              }
+            : { id: arrayorder };
+        });
+        return resultArr;
+      });
+
+      setSData(structuredData);
+      setLoading(false);
+    }, setLoading);
+
     // console.log(myRef);
     if (myRef.current) {
       const style = window.getComputedStyle(myRef.current);
       const y = myRef.current.getBoundingClientRect().top;
-      const newHeight =
-        window.innerHeight -
-        y -
-        style.paddingBottom.slice(0, -2) -
-        style.paddingTop.slice(0, -2);
+      const newHeight = window.innerHeight - y - style.paddingBottom.slice(0, -2) - style.paddingTop.slice(0, -2);
       setBodyHeight(newHeight);
     }
   }, []);
@@ -93,11 +94,7 @@ const SessionView = () => {
   return (
     <>
       <CalanderHeader />
-      <div
-        ref={myRef}
-        className="previewBody"
-        style={{ height: `${bodyHeight}px` }}
-      >
+      <div ref={myRef} className="previewBody" style={{ height: `${bodyHeight}px` }}>
         {/* View Controls */}
         <div className="previewContols" style={{ height: "40px" }}>
           <h2>Session 1</h2>
@@ -105,18 +102,10 @@ const SessionView = () => {
 
         <div className="exerciseTimeline">
           {/* Time Labels */}
-          <TimeMarkings
-            startDate={startDate}
-            displayCardAmount={displayCardAmount}
-            cardHeight={cardHeight}
-          />
+          {!loading && <TimeMarkings startDate={startTime} displayCardAmount={displayCardAmount} cardHeight={cardHeight} />}
 
           {sData.map((data, idx) => (
-            <DisplayTrainingCard
-              key={idx}
-              data={data}
-              cardHeight={cardHeight}
-            />
+            <DisplayTrainingCard key={idx} data={data} cardHeight={cardHeight} />
           ))}
         </div>
       </div>

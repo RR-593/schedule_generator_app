@@ -32,7 +32,7 @@ const SortableExercise = ({ item, onResize }) => {
 
   if (transform) transform.scaleY = 1;
 
-  if (item.title)
+  if (item.name)
     return (
       <ExerciseTimeCard
         item={item}
