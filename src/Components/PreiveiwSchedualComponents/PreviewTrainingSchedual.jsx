@@ -51,7 +51,9 @@ const SessionView = () => {
   const [sData, setSData] = useState([]);
   const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
 
-  const displayCardAmount = 12;
+  const displayCardAmount = 9;
+  const timeInterval = 10;
+
   const cardHeight = () => (bodyHeight - 30) / displayCardAmount;
   const startTime = DateTime.fromFormat("6:30 AM", "h:mm a");
 
@@ -61,18 +63,28 @@ const SessionView = () => {
     fetchEvents((fetchedEvents) => {
       // setEvents(fetchedEvents);
       let st = startTime;
-      let interval = 60;
+      st = st.plus({ minute: (timeInterval*2) });
+      // let interval = 605000;
 
       const structuredData = fetchedEvents.map((item) => {
-        st = st.plus({ minutes: interval });
-        let hourDiff = (st.hour - startTime.hour) * 2;
-        let minDiff = st.minute - startTime.minute;
+        let interval = item.total_time;
 
-        let endTime = st.plus({ millisecond: 315000 });
+        // let hourDiff = (st.hour - startTime.hour) * 2;
+        let minDiff = Math.abs(st.minute - startTime.minute);
 
-        console.log(endTime.toFormat("h:mm a"));
-        item = { ...item, start: st.toFormat("h:mm a"), end: endTime.toFormat("h:mm a"), startPan: 5 * (hourDiff + minDiff) + 1, span: 4 * 2 };
-        const resultArr = Array.from({ length: (displayCardAmount - 1) * 5 - item.span - 1 }, (v, k) => k + 1).map((arrayorder) => {
+        // console.log(minDiff);
+
+        let endTime = st.plus({ millisecond: interval });
+
+
+        let startSpan = Math.floor((minDiff / timeInterval) * 5) + 1;
+        let span = Math.floor((interval / 1000 / 60 / timeInterval) * 4);
+
+
+        item = { ...item, start: st.toFormat("h:mm a"), end: endTime.toFormat("h:mm a"), startPan: startSpan, span: span };
+
+        st = st.plus({ millisecond: interval });
+        const resultArr = Array.from({ length: (displayCardAmount - 1) * 5 - item.span }, (v, k) => k + 1).map((arrayorder) => {
           return item.startPan === arrayorder
             ? {
                 ...item,
@@ -108,7 +120,9 @@ const SessionView = () => {
 
         <div className="exerciseTimeline">
           {/* Time Labels */}
-          {!loading && <TimeMarkings startDate={startTime} displayCardAmount={displayCardAmount} cardHeight={cardHeight} />}
+          {!loading && (
+            <TimeMarkings startDate={startTime} displayCardAmount={displayCardAmount} cardHeight={cardHeight} interval={timeInterval} />
+          )}
 
           {sData.map((data, idx) => (
             <DisplayTrainingCard key={idx} data={data} cardHeight={cardHeight} />
