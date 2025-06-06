@@ -57,9 +57,12 @@
   width: -webkit-fill-available;
   top: 20px;
   left: 68px;
+
+  pointer-events: none;
 }
 
 .exercise-block {
+  pointer-events: auto;
   position: relative;
   background-color: #a5f3fc; /* Tailwind: bg-cyan-200 */
   color: #1e3a8a; /* Tailwind: text-blue-900 */
