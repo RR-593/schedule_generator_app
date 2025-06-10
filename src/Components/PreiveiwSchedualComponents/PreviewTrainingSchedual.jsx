@@ -1,11 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import DisplayTrainingCard from "./DisplayTrainingCard";
-import TimeMarkings from "./TimeMarkings";
-// import newCalanderEvent from "../../StanderdisedObjects/newCalanderEvent";
-import fetchEvents from "../../StanderdisedObjects/fectchEvents";
-import { DateTime } from "luxon";
-
 import CalanderHeader from "../ScheduleGeneratorFormComponents/CalanderHeader";
+import ExerciseTimeline from "./ExerciseTimeline";
 import "../StyleSheets/PreviewTrainingSchedual.css";
 
 // Initial session data
@@ -47,61 +42,11 @@ const initialSessionData = [
 if (initialSessionData) console.log();
 
 const SessionView = () => {
-  const [loading, setLoading] = useState(true);
-  const [sData, setSData] = useState([]);
   const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
-
-  const displayCardAmount = 9;
-  const timeInterval = 10;
-
-  const cardHeight = () => (bodyHeight - 30) / displayCardAmount;
-  const startTime = DateTime.fromFormat("6:30 AM", "h:mm a");
 
   const myRef = useRef(null);
 
   useEffect(() => {
-    fetchEvents((fetchedEvents) => {
-      // setEvents(fetchedEvents);
-      let st = startTime;
-      st = st.plus({ minute: (timeInterval*2) });
-      // let interval = 605000;
-
-      const structuredData = fetchedEvents.map((item) => {
-        let interval = item.total_time;
-
-        // let hourDiff = (st.hour - startTime.hour) ;
-        let minDiff = st.diff(startTime , 'minute').minutes;
-
-        console.log(minDiff);
-
-        let endTime = st.plus({ millisecond: interval });
-
-
-        let startSpan = Math.floor((minDiff / timeInterval) * 5) + 1;
-        let span = Math.floor((interval / 1000 / 60 / timeInterval) * 4);
-
-        // console.log(minDiff);
-
-
-        item = { ...item, start: st.toFormat("h:mm a"), end: endTime.toFormat("h:mm a"), startPan: startSpan, span: span };
-
-        st = st.plus({ millisecond: interval });
-        const resultArr = Array.from({ length: (displayCardAmount - 1) * 5 - item.span }, (v, k) => k + 1).map((arrayorder) => {
-          return item.startPan === arrayorder
-            ? {
-                ...item,
-                id: item.id + "",
-                height: item.span ? item.span * (cardHeight() / 5) : cardHeight(),
-              }
-            : { id: arrayorder };
-        });
-        return resultArr;
-      });
-
-      setSData(structuredData);
-      setLoading(false);
-    }, setLoading);
-
     // console.log(myRef);
     if (myRef.current) {
       const style = window.getComputedStyle(myRef.current);
@@ -120,16 +65,7 @@ const SessionView = () => {
           <h2>Session 1</h2>
         </div>
 
-        <div className="exerciseTimeline">
-          {/* Time Labels */}
-          {!loading && (
-            <TimeMarkings startDate={startTime} displayCardAmount={displayCardAmount} cardHeight={cardHeight} interval={timeInterval} />
-          )}
-
-          {sData.map((data, idx) => (
-            <DisplayTrainingCard key={idx} data={data} cardHeight={cardHeight} />
-          ))}
-        </div>
+        <ExerciseTimeline />
       </div>
     </>
   );

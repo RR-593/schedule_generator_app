@@ -118,5 +118,7 @@ const exercise_rep_list = {
     'resistance-band-row': 4500,
     'resistance-band-squat': 4500,
     'shadow-boxing': 4000,
-    'jump-twist': 4000
+    'jump-twist': 4000,
+    'bouldering': 1000*60,
+    'rock-climbing': 1000*60,
 }

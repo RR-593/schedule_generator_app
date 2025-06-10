@@ -55,7 +55,7 @@ const SortableExercise = ({ item, onResize }) => {
         {...attributes}
         style={{
           height: `${item.height / 5}px`,
-          opacity: 0,
+          opacity: 0.2,
           zIndex:-1,
           pointerEvents: "none",
           backgroundColor: "white",
@@ -110,7 +110,7 @@ const DisplayTrainingCard = ({ data, cardHeight }) => {
               key={idx}
               item={{
                 ...item,
-                height: item.height ?? cardHeight(),
+                height: item.span ? item.span * (cardHeight / 5) : cardHeight,
               }}
               onResize={() => {}}
             />

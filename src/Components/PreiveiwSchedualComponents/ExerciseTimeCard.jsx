@@ -44,13 +44,14 @@ export default function ExerciseTimeCard({
 
   // console.log(isOverlay);
 
+
   if (isOverlay)
     return (
       <div
         className="exercise-block"
         style={{
-          height: item.height ?? "180px",
-          left: "15px"
+          height: item.height ?? "10px",
+          left: "15px",
         }}
       >
         <div className="exercise-block-header">
@@ -58,15 +59,15 @@ export default function ExerciseTimeCard({
           <span>{item.rep_set}</span>
         </div>
         <div className="exercise-block-time">
-          🕒 {item.start} - {item.end}
+          🕒 {item.start} - {item.end} + {item.height}
         </div>
         {item.note && <div className="exercise-block-note">{item.note}</div>}
       </div>
     );
 
+
   return (
     <div
-    
       ref={(el) => {
         setNodeRef(el);
         cardRef.current = el;
@@ -77,7 +78,7 @@ export default function ExerciseTimeCard({
       style={{
         opacity: isDragging ? 0.3 : 1,
         transform: CSS.Transform.toString(transform),
-        transition: isDragging ? transition:'none',
+        transition: isDragging ? transition : "none",
         height: item.height ?? "80px",
       }}
     >
