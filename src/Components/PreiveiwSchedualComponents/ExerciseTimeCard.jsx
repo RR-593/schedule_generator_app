@@ -59,7 +59,7 @@ export default function ExerciseTimeCard({
           <span>{item.rep_set}</span>
         </div>
         <div className="exercise-block-time">
-          🕒 {item.start} - {item.end} + {item.height}
+          🕒 {item.start} - {item.end}
         </div>
         {item.note && <div className="exercise-block-note">{item.note}</div>}
       </div>

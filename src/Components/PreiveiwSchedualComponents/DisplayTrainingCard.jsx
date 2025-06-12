@@ -54,8 +54,8 @@ const SortableExercise = ({ item, onResize }) => {
         {...listeners}
         {...attributes}
         style={{
-          height: `${item.height / 5}px`,
-          opacity: 0.2,
+          height: `${item.height}px`,
+          opacity: 0,
           zIndex:-1,
           pointerEvents: "none",
           backgroundColor: "white",
@@ -66,7 +66,7 @@ const SortableExercise = ({ item, onResize }) => {
     );
 };
 
-const DisplayTrainingCard = ({ data, cardHeight }) => {
+const DisplayTrainingCard = ({ data }) => {
   const [sessionData, setSessionData] = useState(data);
   const [activeId, setActiveId] = useState(null);
   const activeItem = sessionData.find((item) => item.id === activeId);
@@ -110,7 +110,6 @@ const DisplayTrainingCard = ({ data, cardHeight }) => {
               key={idx}
               item={{
                 ...item,
-                height: item.span ? item.span * (cardHeight / 5) : cardHeight,
               }}
               onResize={() => {}}
             />
