@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
+import FrequencyWeek from "../PreiveiwSchedualComponents/HeaderGenerationOptionComponents/FrequencyWeek";
 
 import EditableTextSpan from "./EditableTextSpan";
 import logo1 from "../../Assests/Logo1.png";
@@ -8,14 +10,20 @@ import "../StyleSheets/CalanderHeaderSheet.css";
 
 function CalanderHeader() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isPreview = location.pathname === "/preview";
+
   // const calanderObj = newCalanderEvent({ ...exerciseData });
 
-  const [isPreview, setIsPreview] = useState(true);
   return (
     <div className="calenderHeader">
       <div className="row">
-        <div className="backButton" onClick={() => navigate("/")}>
-          <img alt="Back Button" src={logo1} />
+        <div className="backButton" style={isPreview ? { width: "unset" } : { width: "55px" }} onClick={() => navigate("/")}>
+          {!isPreview ? (
+            <img alt="Back Button" src={logo1} />
+          ) : (
+            <i className="fa fa-chevron-left" style={{ fontSize: "20px" }} aria-hidden="true"></i>
+          )}
         </div>
 
         <div className="calenderName">
@@ -24,7 +32,7 @@ function CalanderHeader() {
           </h2>
         </div>
 
-        {isPreview ? (
+        {!isPreview ? (
           <div className="previewCalenderButton">
             <span onClick={() => navigate("/preview")}>Preview</span>
           </div>
@@ -34,8 +42,16 @@ function CalanderHeader() {
           </div>
         )}
       </div>
-      <hr />
-      <div className="row"></div>
+      {!isPreview ? (
+        <></>
+      ) : (
+        <>
+          <hr />
+          <div className="row">
+            <FrequencyWeek />
+          </div>
+        </>
+      )}
     </div>
   );
 }

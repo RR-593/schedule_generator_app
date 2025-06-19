@@ -14,7 +14,7 @@ export default function ExerciseTimeCard({
   isOverlay = false,
 }) {
   const cardRef = useRef(null);
-  const [resizing, setResizing] = useState(false);
+  const [, setResizing] = useState(false);
 
   // console.log(item);
 

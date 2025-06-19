@@ -37,9 +37,14 @@ input:focus {
   padding: 5px 0px;
 }
 
+h2 {
+  margin: 15px 0px 10px 0px;
+}
+
 hr {
   width: 60%;
   height: 0;
   border-style: solid;
   border-color: #48cae4;
+  margin: 5px auto;
 }

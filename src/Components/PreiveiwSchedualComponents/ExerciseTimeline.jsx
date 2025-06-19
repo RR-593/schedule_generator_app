@@ -113,7 +113,7 @@ const ExerciseTimeline = ({ displayCardAmount = 12, timeInterval = 10 }) => {
         return resultArr;
       });
 
-      console.log(structuredData);
+      // console.log(structuredData);
 
       setSData(structuredData);
     }, setLoading);
