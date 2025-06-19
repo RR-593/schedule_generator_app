@@ -41,9 +41,28 @@ contextBridge.exposeInMainWorld('db', {
       },
 
       // 📄 Select all rows from a table
-      selectAll: (tableName) => {
+      selectAll: (tableName, order) => {
         if (typeof tableName === 'undefined') return;
-        const result = ipcRenderer.invoke('select-all', tableName);
+        const result = ipcRenderer.invoke('select-all', tableName, order);
+        // console.log(result);
+        return result
+      },
+
+      // 📄 Select query rows from a table
+      /**
+       * Select query rows from a table
+       *
+       * @param {string} tableName - Name of the table to query
+       * @param {Object} params - Optional query options
+       * @param {string} [params.cols='*'] - Comma-separated list of columns to select
+       * @param {string} [params.order] - SQL ORDER BY clause (e.g. 'created_at DESC')
+       * @param {string} [params.where] - SQL WHERE condition (e.g. 'status = "active"')
+       * @param {Object} [params.query] - Named parameters for WHERE clause (e.g. { status: 'active' })
+       * @returns {Array<Object>} - Query result rows
+       */
+      select: (tableName, params) => {
+        if (typeof tableName === 'undefined') return;
+        const result = ipcRenderer.invoke('select', tableName, params);
         // console.log(result);
         return result
       },

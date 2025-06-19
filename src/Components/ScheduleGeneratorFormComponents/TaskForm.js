@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import '../StyleSheets/formSheet.css';
 import ExerciseCard from './ExerciseCard';
-import CalanderHeader from './CalanderHeader'
 import fetchEvents from '../../StanderdisedObjects/fectchEvents'
 
 
@@ -99,29 +97,20 @@ const TaskForm = () => {
   }
 
   return (
-    <motion.div
-      className="formBox"
-      initial={{ opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 50 }}
-      transition={{ duration: 0.3 }}
-    >
-      <CalanderHeader />
-      <div className='formBody'>
-        {loading ? (
-          <p>Loading events...</p>
-        ) : (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext key={getUniqueKey()} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
-              {events.map(event => (
-                <SortableExerciseCard key={getUniqueKey(event.id)} event={event} onSave={handleNewEvent} />
-              ))}
-            </SortableContext>
-          </DndContext>
-        )}
-        <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />
-      </div>
-    </motion.div>
+    <div className='formBody'>
+      {loading ? (
+        <p>Loading events...</p>
+      ) : (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext key={getUniqueKey()} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
+            {events.map(event => (
+              <SortableExerciseCard key={getUniqueKey(event.id)} event={event} onSave={handleNewEvent} />
+            ))}
+          </SortableContext>
+        </DndContext>
+      )}
+      <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />
+    </div>
   );
 };
 

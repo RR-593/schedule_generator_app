@@ -1,7 +1,7 @@
 const fetchEvents = async (setState, setLoading) => {
   try {
     const dbFns = window.db.dataBaseFns();
-    const result = await dbFns.selectAll('events');
+    const result = await dbFns.selectAll('events','item_order');
     if (result.length > 0) {
       setState(result);
       localStorage.setItem('currentCalenderEvents', JSON.stringify(result));

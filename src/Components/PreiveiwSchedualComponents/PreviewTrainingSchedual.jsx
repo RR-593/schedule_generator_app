@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import CalanderHeader from "../ScheduleGeneratorFormComponents/CalanderHeader";
 import ExerciseTimeline from "./ExerciseTimeline";
 import "../StyleSheets/PreviewTrainingSchedual.css";
 
@@ -58,7 +57,6 @@ const SessionView = () => {
 
   return (
     <>
-      <CalanderHeader />
       <div ref={myRef} className="previewBody" style={{ height: `${bodyHeight}px` }}>
         {/* View Controls */}
         <div className="previewContols" style={{ height: "40px" }}>

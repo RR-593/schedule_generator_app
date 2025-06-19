@@ -85,9 +85,9 @@ createTable({
     { name: 'name', type: 'TEXT' },
     { name: 'rep_set', type: 'TEXT' },
     { name: 'rep_time', type: 'NUMBER' }, //ms
-    { name: 'set_rest', type: 'NUMBER' }, 
-    { name: 'total_time', type: 'NUMBER' }, 
-    { name: 'frequency', type: 'NUMBER' }, 
+    { name: 'set_rest', type: 'NUMBER' },
+    { name: 'total_time', type: 'NUMBER' },
+    { name: 'frequency', type: 'NUMBER' },
     { name: 'item_order', type: 'NUMBER' },
     { name: 'start', type: 'DATETIME' },
     { name: 'end', type: 'DATETIME' },
@@ -100,12 +100,16 @@ createTable({
   tableName: 'userGeneratedCalenders', columns: [
     { name: 'id', type: 'NUMBER PRIMARY KEY' },
     { name: 'name', type: 'TEXT' },
-    { name: 'availablity', type: 'TEXT' }, 
-    { name: 'rest_length', type: 'NUMBER' }, 
+    { name: 'availablity', type: 'TEXT' },
+    { name: 'rest_length', type: 'NUMBER' },
     { name: 'item_order', type: 'NUMBER' },
     { name: 'flags', type: 'TEXT' }
   ]
 });
+
+
+// const stmt = `INSERT INTO userGeneratedCalenders (id, name, availablity) VALUES (1,'dummyCal','[1,0,0,0,0,1,0]')`;
+// db.prepare(stmt).run();
 
 //
 // 🧱 Create a table with specified columns
@@ -118,12 +122,32 @@ ipcMain.handle('create-table', (event, { tableName, columns }) => {
 //
 // 📄 Select all rows from a given table
 //
-ipcMain.handle('select-all', (event, tableName) => {
-  const stmt = `SELECT * FROM ${tableName} ORDER BY item_order`;
+ipcMain.handle('select-all', (event, tableName, order) => {
+  const hasOrder = typeof order === 'string' && order.trim() !== '';
+  const stmt = `SELECT * FROM ${tableName}${hasOrder ? ` ORDER BY ${order}` : ''}`;
+
   const result = db.prepare(stmt).all();
-  // console.log(result);
   return result;
 });
+
+//
+// 📄 Select 
+//
+ipcMain.handle('select', (event, tableName, params) => {
+  const cols = params.cols || '';
+  const order = params.order || '';
+  const where = params.where || '';
+  const query = params.query || '';
+  const hasCols = typeof cols === 'string' && order.trim() !== '';
+  const hasOrder = typeof order === 'string' && order.trim() !== '';
+  const hasWhere = typeof where === 'string' && order.trim() !== '';
+  const hasQuery = typeof query === 'string' && order.trim() !== '';
+  const stmt = `SELECT ${hasCols ? `${cols}` : '*'} FROM ${tableName}${hasOrder ? ` ORDER BY ${order}` : ''}${hasWhere ? ` WHERE ${where}` : ''}${hasQuery ? ` ${query}` : ''}`;
+  // const result = db.prepare(stmt).all();
+  console.log(stmt);
+  // return result;
+});
+
 
 //
 // ➕ Insert a new row into a specified table
