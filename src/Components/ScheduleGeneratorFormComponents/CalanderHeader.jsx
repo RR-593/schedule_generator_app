@@ -8,7 +8,7 @@ import logo1 from "../../Assests/Logo1.png";
 
 import "../StyleSheets/CalanderHeaderSheet.css";
 
-function CalanderHeader() {
+function CalanderHeader({calendar}) {
   const navigate = useNavigate();
   const location = useLocation();
   const isPreview = location.pathname === "/preview";
@@ -48,7 +48,7 @@ function CalanderHeader() {
         <>
           <hr />
           <div className="row">
-            <FrequencyWeek />
+            <FrequencyWeek calendar={calendar}/>
           </div>
         </>
       )}

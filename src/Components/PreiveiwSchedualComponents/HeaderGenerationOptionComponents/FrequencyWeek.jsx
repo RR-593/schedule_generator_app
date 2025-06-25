@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../../StyleSheets/theme";
 import { DateTime } from "luxon";
@@ -16,7 +16,7 @@ const WeekDaySelectionBox = styled.div`
   width: ${WeekDaySelectionBoxWidth}px;
   height: ${WeekDaySelectionBoxHeight}px;
 
-  &:hover{
+  &:hover {
     cursor: pointer;
   }
 `;
@@ -28,9 +28,9 @@ const ToggleButton = styled.div`
   left: ${({ $idx }) => ToggleButtonWidth * $idx}px;
   width: ${ToggleButtonWidth}px;
   height: ${WeekDaySelectionBoxHeight}px;
-  
+
   color: ${theme.blues[8]};
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   align-content: space-around;
 
   border: solid 1px ${theme.blues[8]};
@@ -40,29 +40,51 @@ const ToggleButton = styled.div`
   background-color: ${({ $selected }) => ($selected ? theme.blues[1] : theme.blues[3])};
 `;
 
-const WeekDay = ({ day, isEdge, idx }) => {
-  const [selected, setSelected] = useState(false);
+const WeekDay = ({ day, isEdge, idx, isSelected, saveCal }) => {
+  const [selected, setSelected] = useState(isSelected);
+
+  useEffect(() => {
+    setSelected(isSelected);
+  }, [isSelected]);
 
   const onClickThis = () => {
     setSelected(!selected);
+    saveCal(idx,!selected);
   };
 
   // console.log(day.toFormat("ccc").slice(0, 1));
-  return <ToggleButton $selected={selected} $isEdge={isEdge} $idx={idx} onClick={onClickThis} >{day.toFormat("ccc").slice(0, 1)}</ToggleButton>;
+  return (
+    <ToggleButton $selected={selected} $isEdge={isEdge} $idx={idx} onClick={onClickThis}>
+      {day.toFormat("ccc").slice(0, 1)}
+    </ToggleButton>
+  );
 };
 
-function FrequencyWeek() {
+function FrequencyWeek({calendar}) {
   const startOfWeek = DateTime.now().startOf("week").plus({ days: 0 });
   const weekDays = Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
 
-  // weekDays.forEach(day => console.log(day.toFormat("ccc").slice(0,1)))
+  console.log(calendar);
+  const availablity = calendar.data.availablity || Array.from({ length: 7 }, (_, i) => 0);
+
+  const saveCal = (idx, s )=>{
+    calendar.data.availablity[idx] =s| 0
+    calendar.save();
+  }
 
   return (
     <FrequencyWeekBox>
       <span>Frequency :</span>
       <WeekDaySelectionBox>
         {weekDays.map((day, idx) => (
-          <WeekDay key={idx} idx={idx} day={day} isEdge={idx === 0 ? "l" : idx === weekDays.length - 1 ? "r" : "none"} />
+          <WeekDay
+            key={idx}
+            idx={idx}
+            day={day}
+            isSelected={availablity[idx] === 1}
+            saveCal={saveCal}
+            isEdge={idx === 0 ? "l" : idx === weekDays.length - 1 ? "r" : "none"}
+          />
         ))}
       </WeekDaySelectionBox>
     </FrequencyWeekBox>

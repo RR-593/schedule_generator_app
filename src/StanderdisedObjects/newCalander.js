@@ -16,6 +16,7 @@ export default function newCalander(data = {}, fallback = {}) {
   const {
     no_id = 0,
     no_name = 'New Training Schedule...',
+    no_availablity = Array.from({ length: 7 }, (_, i) => 0),
     no_item_order = 0,
   } = fallback;
 
@@ -25,7 +26,7 @@ export default function newCalander(data = {}, fallback = {}) {
     data: {
       id: data.id || no_id,
       name: data.name || no_name,
-      availablity: data.availablity || '',
+      availablity: JSON.parse(data.availablity) || no_availablity,
       rest_length: data.rep_time || 0,
       item_order: data.item_order || no_item_order,
       flags: data.flags || ''
@@ -33,40 +34,27 @@ export default function newCalander(data = {}, fallback = {}) {
 
 
     /**
-     * Saves the event data to localStorage and database. If the event has an ID, it updates; otherwise, inserts a new one.
+     * Saves the Calander data to localStorage and database. If the event has an ID, it updates; otherwise, inserts a new one.
      *
      * @param {Function} [callBackFn] - Optional callback to execute after saving.
      */
-    saveEvent: function (callBackFn) {
-      const eventsJSON = localStorage.getItem('currentCalender');
-
+    save: function (callBackFn) {
       /** 
        * @type {{
        *     id: number,
        *     name: string,
-       *     availablity: string,
+       *     availablity: Array,
        *     rest_length: number,
        *     item_order: number,
        *     flags: string
        *   }[]} 
       */
-      const calendars = eventsJSON ? JSON.parse(eventsJSON) : [];
 
-      let newId = 1;
+      const preparedData = {...this.data, availablity:JSON.stringify(this.data.availablity)}
 
       if (this.data.id !== 0) {
-        dbFns.updateRow({ tableName: 'userGeneratedCalenders', data: this.data, where: { id: this.data.id } });
-      } else {
-        const existingIds = calendars.map(calendar => calendar.id);
-        while (existingIds.includes(newId)) newId++;
-
-        this.data.id = newId;
-        this.data.item_order = calendars.length > 0 ? calendars[calendars.length - 1].item_order + 1 : 0;
-
-        dbFns.insertInto({ tableName: 'userGeneratedCalenders', data: this.data });
-      }
-
-      console.log(`Exercise ID saved: ${this.data.id}`);
+        dbFns.updateRow({ tableName: 'userGeneratedCalenders', data: preparedData, where: { id: this.data.id } });
+      } 
 
       if (typeof callBackFn === 'function') callBackFn();
     }

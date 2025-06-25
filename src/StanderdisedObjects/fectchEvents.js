@@ -10,7 +10,7 @@ const fetchEvents = async (setState, setLoading) => {
 
     if (result !== undefined) {
       const resArr = [].concat(result)
-      console.log(resArr);
+      // console.log(resArr);
       setState(resArr);
       localStorage.setItem('currentCalenderEvents', JSON.stringify(resArr));
     } else {

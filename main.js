@@ -98,7 +98,7 @@ createTable({
 
 createTable({
   tableName: 'userGeneratedCalenders', columns: [
-    { name: 'id', type: 'NUMBER PRIMARY KEY' },
+    { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
     { name: 'name', type: 'TEXT' },
     { name: 'availablity', type: 'TEXT' },
     { name: 'rest_length', type: 'NUMBER' },
@@ -143,7 +143,7 @@ ipcMain.handle('select', (event, tableName, params) => {
   const hasWhere = typeof where === 'string' && where.trim() !== '';
   const hasQuery = typeof query === 'string' && query.trim() !== '';
   const stmt = `SELECT ${hasCols ? `${cols}` : '*'} FROM ${tableName}${hasWhere ? ` WHERE ${where}` : ``}${hasOrder ? ` ORDER BY ${order}` : ``}${hasQuery ? ` ${query}` : ``}`;
-  console.log(stmt);
+  // console.log(stmt);
   const result = db.prepare(stmt).all();
   return result;
 });
