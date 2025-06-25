@@ -33,10 +33,14 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
 
   const dbFns = window.db.dataBaseFns();
 
+
+  const calendarJSON = localStorage.getItem('activeCalendar');
+  const calender_id = calendarJSON ? JSON.parse(calendarJSON).id : 1;
+
   return {
     data: {
       id: data.id || no_id,
-      calender_id: 0,
+      calender_id: calender_id,
       name: data.name || no_name,
       rep_set: data.rep_set || no_rep_set,
       rep_time: data.rep_time || no_rep_time,
@@ -77,7 +81,7 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
       */
       const events = eventsJSON ? JSON.parse(eventsJSON) : [];
 
-      let newId = 1;
+      // let newId = 1;
 
       if (this.data.id !== 0) {
 
@@ -94,13 +98,15 @@ export default function newCalanderEvent(data = {}, fallback = {}) {
 
         dbFns.updateRow({ tableName: 'events', data: this.data, where: { id: this.data.id } });
       } else {
-        const existingIds = events.map(event => event.id);
-        while (existingIds.includes(newId)) newId++;
+        // const existingIds = events.map(event => event.id);
+        // while (existingIds.includes(newId)) newId++;
 
-        this.data.id = newId;
+        // this.data.id = newId;
+        
         this.data.item_order = events.length > 0 ? events[events.length - 1].item_order + 1 : 0;
 
-        dbFns.insertInto({ tableName: 'events', data: this.data });
+        const { id, ...dataWithoutId } = this.data;
+        dbFns.insertInto({ tableName: 'events', data: dataWithoutId });
       }
 
       console.log(`Exercise ID saved: ${this.data.id}`);

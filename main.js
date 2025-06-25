@@ -80,7 +80,7 @@ const createTable = ({ tableName, columns }) => {
 
 createTable({
   tableName: 'events', columns: [
-    { name: 'id', type: 'NUMBER PRIMARY KEY' },
+    { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
     { name: 'calender_id', type: 'NUMBER' },
     { name: 'name', type: 'TEXT' },
     { name: 'rep_set', type: 'TEXT' },
@@ -138,14 +138,14 @@ ipcMain.handle('select', (event, tableName, params) => {
   const order = params.order || '';
   const where = params.where || '';
   const query = params.query || '';
-  const hasCols = typeof cols === 'string' && order.trim() !== '';
+  const hasCols = typeof cols === 'string' && cols.trim() !== '';
   const hasOrder = typeof order === 'string' && order.trim() !== '';
-  const hasWhere = typeof where === 'string' && order.trim() !== '';
-  const hasQuery = typeof query === 'string' && order.trim() !== '';
-  const stmt = `SELECT ${hasCols ? `${cols}` : '*'} FROM ${tableName}${hasOrder ? ` ORDER BY ${order}` : ''}${hasWhere ? ` WHERE ${where}` : ''}${hasQuery ? ` ${query}` : ''}`;
-  // const result = db.prepare(stmt).all();
+  const hasWhere = typeof where === 'string' && where.trim() !== '';
+  const hasQuery = typeof query === 'string' && query.trim() !== '';
+  const stmt = `SELECT ${hasCols ? `${cols}` : '*'} FROM ${tableName}${hasWhere ? ` WHERE ${where}` : ``}${hasOrder ? ` ORDER BY ${order}` : ``}${hasQuery ? ` ${query}` : ``}`;
   console.log(stmt);
-  // return result;
+  const result = db.prepare(stmt).all();
+  return result;
 });
 
 
@@ -164,6 +164,7 @@ ipcMain.handle('insert-into', (event, { tableName, data }) => {
 
   const stmt = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders})`;
   console.log(stmt);
+  console.log(values);
   return db.prepare(stmt).run(values);
 });
 
