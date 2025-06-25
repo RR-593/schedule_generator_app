@@ -8,7 +8,7 @@ import logo1 from "../../Assests/Logo1.png";
 
 import "../StyleSheets/CalanderHeaderSheet.css";
 
-function CalanderHeader({calendar}) {
+function CalanderHeader({ calendar }) {
   const navigate = useNavigate();
   const location = useLocation();
   const isPreview = location.pathname === "/preview";
@@ -28,7 +28,13 @@ function CalanderHeader({calendar}) {
 
         <div className="calenderName">
           <h2>
-            <EditableTextSpan />
+            <EditableTextSpan
+              initialText={calendar.data.name}
+              onSave={(newName) => {
+                calendar.data.name = newName;
+                calendar.save();
+              }}
+            />
           </h2>
         </div>
 
@@ -48,7 +54,7 @@ function CalanderHeader({calendar}) {
         <>
           <hr />
           <div className="row">
-            <FrequencyWeek calendar={calendar}/>
+            <FrequencyWeek calendar={calendar} />
           </div>
         </>
       )}

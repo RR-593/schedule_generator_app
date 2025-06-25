@@ -1,22 +1,40 @@
 /**
- * 
+ * Creates a new calendar event object with default or provided values.
+ * Provides a method to save the object to localStorage or a database.
+ *
+ * @param {Partial<{
+ *   id: number,
+ *   name: string,
+ *   availablity: string, // JSON stringified array
+ *   rep_time: number,
+ *   item_order: number,
+ *   flags: string
+ * }>} data - Initial data to populate the calendar.
+ *
+ * @param {Partial<{
+ *   no_id: number,
+ *   no_name: string,
+ *   no_availablity: number[],
+ *   no_item_order: number
+ * }>} fallback - Fallback/default values if data fields are missing.
+ *
  * @returns {{
  *   data: {
  *     id: number,
  *     name: string,
- *     availablity: string,
+ *     availablity: number[],
  *     rest_length: number,
  *     item_order: number,
  *     flags: string
  *   },
- *   saveEvent: (callBackFn?: Function) => void
- * }} A calendar event object with prefilled fields and a save method.
+ *   save: (callBackFn?: Function) => void
+ * }}
  */
 export default function newCalander(data = {}, fallback = {}) {
   const {
     no_id = 0,
     no_name = 'New Training Schedule...',
-    no_availablity = Array.from({ length: 7 }, (_, i) => 0),
+    no_availablity = Array.from({ length: 7 }, () => 0),
     no_item_order = 0,
   } = fallback;
 
@@ -32,29 +50,24 @@ export default function newCalander(data = {}, fallback = {}) {
       flags: data.flags || ''
     },
 
-
     /**
-     * Saves the Calander data to localStorage and database. If the event has an ID, it updates; otherwise, inserts a new one.
+     * Saves the calendar object to the database. Updates if an ID exists, otherwise does nothing.
      *
      * @param {Function} [callBackFn] - Optional callback to execute after saving.
      */
     save: function (callBackFn) {
-      /** 
-       * @type {{
-       *     id: number,
-       *     name: string,
-       *     availablity: Array,
-       *     rest_length: number,
-       *     item_order: number,
-       *     flags: string
-       *   }[]} 
-      */
-
-      const preparedData = {...this.data, availablity:JSON.stringify(this.data.availablity)}
+      const preparedData = {
+        ...this.data,
+        availablity: JSON.stringify(this.data.availablity),
+      };
 
       if (this.data.id !== 0) {
-        dbFns.updateRow({ tableName: 'userGeneratedCalenders', data: preparedData, where: { id: this.data.id } });
-      } 
+        dbFns.updateRow({
+          tableName: 'userGeneratedCalenders',
+          data: preparedData,
+          where: { id: this.data.id },
+        });
+      }
 
       if (typeof callBackFn === 'function') callBackFn();
     }

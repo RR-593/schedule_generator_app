@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CalanderHeader from "./ScheduleGeneratorFormComponents/CalanderHeader";
 import fetchCalender from "../StanderdisedObjects/fetchCalender";
+import newCalander from "../StanderdisedObjects/newCalander";
 
 const CalenderCRUD = ({ children }) => {
+  /**
+   * React state hook for managing the current calendar object.
+   *
+   * @type {[ReturnType<typeof newCalander> | undefined, React.Dispatch<React.SetStateAction<ReturnType<typeof newCalander> | undefined>>]}
+   */
   const [calendar, setcalendar] = useState();
   const [loading, setLoading] = useState(true);
 
