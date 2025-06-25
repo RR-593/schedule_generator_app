@@ -19,6 +19,8 @@ import {
   arrayMove
 } from '@dnd-kit/sortable';
 
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+
 import { CSS } from '@dnd-kit/utilities';
 
 
@@ -101,7 +103,7 @@ const TaskForm = () => {
       {loading ? (
         <p>Loading events...</p>
       ) : (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
           <SortableContext key={getUniqueKey()} items={events.map(e => e.id.toString())} strategy={verticalListSortingStrategy}>
             {events.map(event => (
               <SortableExerciseCard key={getUniqueKey(event.id)} event={event} onSave={handleNewEvent} />
@@ -109,7 +111,7 @@ const TaskForm = () => {
           </SortableContext>
         </DndContext>
       )}
-      <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} />
+      <ExerciseCard key={getUniqueKey()} onSave={handleNewEvent} newCard={true}/>
     </div>
   );
 };

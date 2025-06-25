@@ -48,7 +48,7 @@ if (initialSessionData) console.log();
 const ExerciseTimeline = ({ displayCardAmount = 12, timeInterval = 10 }) => {
   const [loading, setLoading] = useState(true);
   const [sData, setSData] = useState([]);
-  const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
+  const [bodyHeight, setBodyHeight] = useState(window.innerHeight - 10);
   const [cardSlotHeight, setCardSlotHeight] = useState((bodyHeight - 40) / displayCardAmount);
 
   // console.log("bodyHeight: " + bodyHeight);
@@ -67,7 +67,7 @@ const ExerciseTimeline = ({ displayCardAmount = 12, timeInterval = 10 }) => {
     // const style = window.getComputedStyle(myRef.current);
 
     const y = myRef.current.getBoundingClientRect().top;
-    const newHeight = window.innerHeight - y - 10;
+    const newHeight = window.innerHeight - y - 15;
 
     const usf = newHeight / displayCardAmount;
 

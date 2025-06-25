@@ -4,7 +4,7 @@ import "../StyleSheets/ExerciseCard.css";
 import newCalanderEvent from "../../StanderdisedObjects/newCalanderEvent"
 import getExerciseDefaultRepTime from "../../StanderdisedObjects/getExerciseDefaultRepTime"
 
-const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
+const ExerciseCard = ({ exerciseData = { id: 0 }, onSave, newCard = false }) => {
   const eventObj = newCalanderEvent({ ...exerciseData });
 
   const [calEvent, setcalendarEvent] = useState({ ...eventObj.data });
@@ -59,9 +59,9 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
   }
 
   const handleNotesSave = (e) => {
-    let data =  e.target.value.trim();
+    let data = e.target.value.trim();
     if (data === '') return;
-    saveData({ note: data})
+    saveData({ note: data })
   }
 
   const saveData = (data) => {
@@ -102,7 +102,7 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
 
   return (
     <div className="exerciseCard">
-      <div className="cardControls" hidden={calEvent.id === 0}>
+      <div className="cardControls" hidden={newCard}>
         <div className="delete" onClick={deleteData}>
           <Icon {...iconStyles}>
             <circle cx="6" cy="6" r="6" fill="#aacbce" />
@@ -116,34 +116,22 @@ const ExerciseCard = ({ exerciseData = { id: 0 }, onSave }) => {
           </Icon>
         </div>
       </div>
-      {false ? (
-        <div className="card"> {/* Pull-Ups Card */}
-          <div className="details">
-            <h3>Pull-Ups</h3>
-            <p>10 reps x 10 sets</p>
-            <p>(Twice a Week)</p>
-          </div>
-          <textarea placeholder="Notes..." />
+      < div className={`card ${newCard?'newCard':''}`} > 
+        <div className="details">
+          <h3>
+            <EditableTextSpan initialText={calEvent.name} onSave={handleTitleSave} />
+          </h3>
+          <p> </p>
+          <EditableTextSpan initialText={calEvent.rep_set} onSave={handleRepSetSave} />
         </div>
-      ) : (
-        < div className="card" > {/* Generic Card */}
-          <div className="details">
-            <h3>
-              <EditableTextSpan initialText={calEvent.name} onSave={handleTitleSave} />
-            </h3>
-            <p> </p>
-            <EditableTextSpan initialText={calEvent.rep_set} onSave={handleRepSetSave} />
-          </div>
-          {/* <EditableTextSpan className="noteBox" initialText={eNote} onSave={handleNoteSave} /> */}
-          <textarea
-            placeholder="Notes..."
-            value={calEvent.note}
-            onChange={(e) => setcalendarEvent({ ...calEvent, note: e.target.value })}
-            onBlur={(e) => handleNotesSave(e)}
-          />
-        </div>
-      )}
-
+        {/* <EditableTextSpan className="noteBox" initialText={eNote} onSave={handleNoteSave} /> */}
+        <textarea
+          placeholder="Notes..."
+          value={calEvent.note}
+          onChange={(e) => setcalendarEvent({ ...calEvent, note: e.target.value })}
+          onBlur={(e) => handleNotesSave(e)}
+        />
+      </div>
     </div>
   );
 };
