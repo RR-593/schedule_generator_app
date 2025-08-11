@@ -7,7 +7,10 @@ export default function CalendarEvents() {
   useEffect(() => {
     window.calendarAPI
       .getEvents()
-      .then((res) => setEvents(res))
+      .then((res) => {
+        console.log(res);
+        setEvents(res)
+      })
       .catch((err) => console.error("Calendar error:", err));
   }, []);
 

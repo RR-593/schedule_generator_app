@@ -13,8 +13,8 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <CalenderCRUD>
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<TaskForm />} />
-          <Route path="/appleCalendar" element={<CalendarEvents />} />
+          <Route path="/main" element={<TaskForm />} />
+          <Route path="/" element={<CalendarEvents />} />
           <Route path="/preview" element={<PreviewTrainingSchedual />} />
         </Routes>
       </CalenderCRUD>
